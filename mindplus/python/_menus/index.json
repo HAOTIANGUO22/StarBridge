@@ -1,0 +1,59 @@
+{
+  "PIN": {
+    "menu": [
+      ["P0", "Pin.P0"], ["P1", "Pin.P1"], ["P2", "Pin.P2"],
+      ["P3", "Pin.P3"], ["P4", "Pin.P4"], ["P5", "Pin.P5"],
+      ["P6", "Pin.P6"], ["P7", "Pin.P7"], ["P8", "Pin.P8"],
+      ["P9", "Pin.P9"], ["P10", "Pin.P10"], ["P11", "Pin.P11"],
+      ["P13", "Pin.P13"], ["P14", "Pin.P14"], ["P15", "Pin.P15"],
+      ["P16", "Pin.P16"], ["P19", "Pin.P19"], ["P20", "Pin.P20"]
+    ]
+  },
+  "INPUT_PIN": {
+    "menu": [
+      ["P0", "Pin.P0"], ["P1", "Pin.P1"], ["P2", "Pin.P2"],
+      ["P3", "Pin.P3"], ["P4", "Pin.P4"], ["P5", "Pin.P5"],
+      ["P6", "Pin.P6"], ["P7", "Pin.P7"], ["P8", "Pin.P8"],
+      ["P9", "Pin.P9"], ["P10", "Pin.P10"], ["P11", "Pin.P11"],
+      ["P13", "Pin.P13"], ["P14", "Pin.P14"], ["P15", "Pin.P15"],
+      ["P16", "Pin.P16"], ["P19", "Pin.P19"], ["P20", "Pin.P20"]
+    ]
+  },
+  "OUTPUT_PIN": {
+    "menu": [
+      ["P0", "Pin.P0"], ["P1", "Pin.P1"], ["P5", "Pin.P5"],
+      ["P6", "Pin.P6"], ["P7", "Pin.P7"], ["P8", "Pin.P8"],
+      ["P9", "Pin.P9"], ["P11", "Pin.P11"], ["P13", "Pin.P13"],
+      ["P14", "Pin.P14"], ["P15", "Pin.P15"], ["P16", "Pin.P16"],
+      ["P19", "Pin.P19"], ["P20", "Pin.P20"]
+    ]
+  },
+  "ANALOG_PIN": {
+    "menu": [
+      ["P0", "Pin.P0"], ["P1", "Pin.P1"], ["P2", "Pin.P2"],
+      ["P3", "Pin.P3"], ["P4 / 光线", "Pin.P4"], ["P8", "Pin.P8"],
+      ["P9", "Pin.P9"], ["P10", "Pin.P10"]
+    ]
+  },
+  "DAC_PIN": {
+    "menu": [["P8", "Pin.P8"], ["P9", "Pin.P9"]]
+  },
+  "DHT_PIN": {
+    "menu": [
+      ["P0", "Pin.P0"], ["P1", "Pin.P1"], ["P5", "Pin.P5"],
+      ["P6", "Pin.P6"], ["P7", "Pin.P7"], ["P8", "Pin.P8"],
+      ["P9", "Pin.P9"], ["P11", "Pin.P11"], ["P13", "Pin.P13"],
+      ["P14", "Pin.P14"], ["P15", "Pin.P15"], ["P16", "Pin.P16"],
+      ["P19", "Pin.P19"], ["P20", "Pin.P20"]
+    ]
+  },
+  "PIN_MODE": {
+    "menu": [
+      ["输入", "PinMode.INPUT"], ["输出", "PinMode.OUTPUT"],
+      ["上拉输入", "PinMode.INPUT_PULLUP"], ["下拉输入", "PinMode.INPUT_PULLDOWN"]
+    ]
+  },
+  "DIGITAL_VALUE": {
+    "menu": [["高电平", "True"], ["低电平", "False"]]
+  }
+}

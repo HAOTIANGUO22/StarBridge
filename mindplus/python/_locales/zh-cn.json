@@ -1,0 +1,18 @@
+{
+  "starbridge.beginAuto|block": "连接星核板 V2（自动识别串口）",
+  "starbridge.beginPort|block": "连接星核板 V2 串口 [PORT]",
+  "starbridge.pinMode|block": "设置引脚 [PIN] 模式为 [MODE]",
+  "starbridge.digitalWrite|block": "数字写入 引脚 [PIN] 值 [VALUE]",
+  "starbridge.digitalRead|block": "数字读取 引脚 [PIN]",
+  "starbridge.analogRead|block": "模拟读取 引脚 [PIN]",
+  "starbridge.analogReadMillivolts|block": "模拟读取毫伏 引脚 [PIN]",
+  "starbridge.analogWrite|block": "DAC 输出 引脚 [PIN] 数值 [VALUE]",
+  "starbridge.pwmConfigure|block": "配置 PWM 引脚 [PIN] 频率 [FREQUENCY] Hz 分辨率 [RESOLUTION] 位",
+  "starbridge.pwmWrite|block": "PWM 写入 引脚 [PIN] 占空值 [DUTY]",
+  "starbridge.pwmStop|block": "停止 PWM 引脚 [PIN]",
+  "starbridge.dht11Temperature|block": "DHT11 引脚 [PIN] 温度（℃）",
+  "starbridge.dht11Humidity|block": "DHT11 引脚 [PIN] 湿度（%）",
+  "starbridge.ultrasonicCm|block": "超声波 TRIG [TRIGGER] ECHO [ECHO] 距离（cm）",
+  "starbridge.resetState|block": "复位星核板外设状态",
+  "starbridge.close|block": "关闭 StarBridge 连接"
+}

@@ -1,0 +1,39 @@
+{
+  "name": {
+    "zh-cn": "StarBridge 星核板",
+    "en": "StarBridge StarCore"
+  },
+  "description": {
+    "zh-cn": "使用 Python 积木控制星核板 V2 的 GPIO、模拟量、PWM 和常用传感器。",
+    "en": "Control StarCore V2 GPIO, analog I/O, PWM and common sensors with Python blocks."
+  },
+  "author": "StarBridge",
+  "email": "",
+  "license": "MIT",
+  "isBoard": false,
+  "id": "starbridge",
+  "platform": ["win"],
+  "version": "0.2.1",
+  "asset": {
+    "python": {
+      "dir": "python/",
+      "main": "main.ts",
+      "dependencies": {},
+      "files": [
+        "_images/featured.png",
+        "_images/icon.svg",
+        "_locales/zh-cn.json",
+        "_locales/en.json",
+        "_menus/index.json",
+        "libraries/starbridge_mindplus.py",
+        "libraries/starbridge_offline/firmware/starcore-v2/boot_app0.bin",
+        "libraries/starbridge_offline/firmware/starcore-v2/bootloader.bin",
+        "libraries/starbridge_offline/firmware/starcore-v2/firmware.bin",
+        "libraries/starbridge_offline/firmware/starcore-v2/manifest.json",
+        "libraries/starbridge_offline/firmware/starcore-v2/partitions.bin",
+        "libraries/starbridge_offline/windows-x86_64/ESPTOOL_LICENSE.txt",
+        "libraries/starbridge_offline/windows-x86_64/esptool.exe"
+      ]
+    }
+  }
+}

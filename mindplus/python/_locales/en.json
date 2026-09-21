@@ -1,0 +1,18 @@
+{
+  "starbridge.beginAuto|block": "connect StarCore V2 (auto-detect port)",
+  "starbridge.beginPort|block": "connect StarCore V2 on [PORT]",
+  "starbridge.pinMode|block": "set pin [PIN] mode to [MODE]",
+  "starbridge.digitalWrite|block": "digital write pin [PIN] value [VALUE]",
+  "starbridge.digitalRead|block": "digital read pin [PIN]",
+  "starbridge.analogRead|block": "analog read pin [PIN]",
+  "starbridge.analogReadMillivolts|block": "analog read pin [PIN] in millivolts",
+  "starbridge.analogWrite|block": "DAC write pin [PIN] value [VALUE]",
+  "starbridge.pwmConfigure|block": "configure PWM pin [PIN] frequency [FREQUENCY] Hz resolution [RESOLUTION] bits",
+  "starbridge.pwmWrite|block": "PWM write pin [PIN] duty [DUTY]",
+  "starbridge.pwmStop|block": "stop PWM pin [PIN]",
+  "starbridge.dht11Temperature|block": "DHT11 pin [PIN] temperature (C)",
+  "starbridge.dht11Humidity|block": "DHT11 pin [PIN] humidity (%)",
+  "starbridge.ultrasonicCm|block": "ultrasonic TRIG [TRIGGER] ECHO [ECHO] distance (cm)",
+  "starbridge.resetState|block": "reset StarCore peripheral state",
+  "starbridge.close|block": "close StarBridge connection"
+}
