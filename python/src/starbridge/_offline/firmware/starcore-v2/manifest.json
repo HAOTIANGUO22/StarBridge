@@ -1,0 +1,32 @@
+{
+  "esp32_core_version": "3.3.11",
+  "sdk_version": "4.4.0",
+  "chip": "esp32",
+  "board": "starcore-v2",
+  "esptool_version": "5.3.1",
+  "firmware_version": "4.0.0",
+  "baud": 921600,
+  "images": [
+    {
+      "sha256": "6f388700221f4f5be03bb7b902808504557431612e3a07e4af11ea19c7f5f27e",
+      "file": "bootloader.bin",
+      "offset": "0x1000"
+    },
+    {
+      "sha256": "1d9cca96de0fe07ad7fc0648b9878ddecd9ce565e38b589ad20fea698ed4c80c",
+      "file": "partitions.bin",
+      "offset": "0x8000"
+    },
+    {
+      "sha256": "f94c5d786a7a8fab06ac5d10e33bf37711a6697636dc037559ea19cc410a17f0",
+      "file": "boot_app0.bin",
+      "offset": "0xe000"
+    },
+    {
+      "sha256": "1d5e346b715422fec100adc2385aaab70f85e1db4316b9fe0c8a24906a6ab68a",
+      "file": "firmware.bin",
+      "offset": "0x10000"
+    }
+  ],
+  "format": 1
+}

@@ -1,0 +1,492 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>StarBridge 4.4 元器件示例手册</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f5f5f7;
+      --panel: rgba(255, 255, 255, 0.82);
+      --panel-solid: #ffffff;
+      --panel-2: #f5f5f7;
+      --text: #1d1d1f;
+      --muted: #6e6e73;
+      --blue: #0071e3;
+      --blue-hover: #0077ed;
+      --cyan: #00a6a6;
+      --orange: #bf5b00;
+      --line: rgba(0, 0, 0, 0.08);
+      --code: #1d1d1f;
+      --shadow: 0 18px 50px rgba(0, 0, 0, 0.08);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 12% 4%, rgba(0, 113, 227, 0.10) 0, transparent 28rem),
+        radial-gradient(circle at 88% 8%, rgba(175, 82, 222, 0.08) 0, transparent 26rem),
+        var(--bg);
+      font: 16px/1.62 -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Segoe UI", "Microsoft YaHei", sans-serif;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+    a { color: var(--blue); }
+    header {
+      position: relative;
+      overflow: hidden;
+      padding: 92px 24px 72px;
+      text-align: center;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.56);
+      backdrop-filter: saturate(180%) blur(24px);
+      -webkit-backdrop-filter: saturate(180%) blur(24px);
+    }
+    .brand {
+      margin: 0;
+      font-size: clamp(48px, 8vw, 82px);
+      font-weight: 700;
+      line-height: 1.04;
+      letter-spacing: -0.055em;
+      background: linear-gradient(110deg, #1d1d1f 10%, #0071e3 55%, #af52de 100%);
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+    .tagline {
+      margin: 22px auto 0;
+      max-width: 720px;
+      color: var(--muted);
+      font-size: clamp(18px, 2.6vw, 22px);
+      line-height: 1.45;
+      letter-spacing: -0.015em;
+    }
+    .version {
+      display: inline-block;
+      margin-top: 28px;
+      padding: 8px 14px;
+      color: var(--blue);
+      border: 1px solid rgba(0, 113, 227, 0.16);
+      border-radius: 999px;
+      background: rgba(0, 113, 227, 0.08);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+    }
+    .layout {
+      display: grid;
+      grid-template-columns: 248px minmax(0, 900px);
+      gap: 32px;
+      max-width: 1228px;
+      margin: 0 auto;
+      padding: 48px 24px 96px;
+    }
+    nav {
+      position: sticky;
+      top: 20px;
+      align-self: start;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.76);
+      box-shadow: 0 12px 34px rgba(0, 0, 0, 0.06);
+      backdrop-filter: saturate(180%) blur(22px);
+      -webkit-backdrop-filter: saturate(180%) blur(22px);
+    }
+    nav strong {
+      display: block;
+      margin: 2px 10px 12px;
+      color: var(--text);
+      font-size: 13px;
+      letter-spacing: 0.04em;
+    }
+    nav a {
+      display: block;
+      padding: 8px 10px;
+      color: var(--muted);
+      text-decoration: none;
+      border-radius: 10px;
+      font-size: 14px;
+      transition: color 160ms ease, background 160ms ease, transform 160ms ease;
+    }
+    nav a:hover {
+      color: var(--blue-hover);
+      background: rgba(0, 113, 227, 0.08);
+      transform: translateX(2px);
+    }
+    main { min-width: 0; }
+    section {
+      scroll-margin-top: 20px;
+      margin-bottom: 24px;
+      padding: clamp(24px, 4vw, 36px);
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+    h2 {
+      margin: 0 0 12px;
+      font-size: clamp(27px, 4vw, 34px);
+      line-height: 1.2;
+      letter-spacing: -0.035em;
+    }
+    h3 { margin-top: 30px; color: var(--text); font-size: 19px; letter-spacing: -0.015em; }
+    p { margin: 8px 0 16px; }
+    .meta { color: var(--muted); }
+    .wiring {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
+      gap: 12px;
+      margin: 20px 0;
+    }
+    .wire {
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--panel-2);
+    }
+    .wire b { display: block; color: var(--blue); font-size: 14px; }
+    .note, .warning {
+      margin: 18px 0;
+      padding: 15px 17px;
+      border: 1px solid rgba(0, 113, 227, 0.10);
+      border-radius: 14px;
+      background: rgba(0, 113, 227, 0.07);
+    }
+    .warning { border-color: rgba(191, 91, 0, 0.14); background: rgba(255, 149, 0, 0.10); }
+    pre {
+      position: relative;
+      overflow: auto;
+      margin: 18px 0 0;
+      padding: 22px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 18px;
+      background: var(--code);
+      color: #f5f5f7;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07);
+      tab-size: 4;
+    }
+    code { font: 14px/1.65 "SFMono-Regular", Consolas, "Cascadia Code", monospace; }
+    :not(pre) > code {
+      padding: 0.16em 0.38em;
+      color: #9a3412;
+      border-radius: 6px;
+      background: #f1f1f3;
+      font-size: 0.88em;
+    }
+    .copy {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      padding: 6px 11px;
+      color: #f5f5f7;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.10);
+      cursor: pointer;
+      font-size: 12px;
+      transition: background 160ms ease, transform 160ms ease;
+    }
+    .copy:hover { background: rgba(255, 255, 255, 0.18); transform: translateY(-1px); }
+    footer { padding: 32px; color: var(--muted); text-align: center; font-size: 13px; }
+    @media (max-width: 820px) {
+      header { padding: 64px 20px 52px; }
+      .layout { grid-template-columns: 1fr; padding: 24px 16px 72px; }
+      nav { position: static; columns: 2; border-radius: 20px; }
+      nav strong { column-span: all; }
+      section { border-radius: 22px; }
+    }
+    @media (max-width: 520px) {
+      nav { columns: 1; }
+      pre { margin-inline: -8px; padding: 20px 16px; border-radius: 14px; }
+      .copy { position: sticky; float: right; margin: -8px -4px 6px 10px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      nav a, .copy { transition: none; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1 class="brand">StarBridge</h1>
+    <p class="tagline">星核板 V2 · Python 元器件示例手册。所有示例均使用公开 SDK API，可直接复制到 PyCharm 运行。</p>
+    <span class="version">SDK 4.4.0 · Protocol V2 · Firmware 4.0.0</span>
+  </header>
+
+  <div class="layout">
+    <nav aria-label="示例目录">
+      <strong>示例目录</strong>
+      <a href="#install">安装与连接</a>
+      <a href="#gpio">数字输入输出</a>
+      <a href="#analog">模拟量 / ADC</a>
+      <a href="#dac">模拟输出 / DAC</a>
+      <a href="#pwm">PWM 与蜂鸣器</a>
+      <a href="#oled">OLED 显示屏</a>
+      <a href="#dht11">DHT11 温湿度</a>
+      <a href="#pixels">WS2812 灯带</a>
+      <a href="#ultrasonic">超声波测距</a>
+      <a href="#mp3">DFR0534 MP3</a>
+      <a href="#dashboard">综合环境仪表</a>
+      <a href="#errors">异常处理</a>
+    </nav>
+
+    <main>
+      <section id="install">
+        <h2>安装与连接</h2>
+        <p class="meta">Windows wheel 内置固件、esptool 和串口运行库，不需要 Arduino IDE 或 Arduino CLI。</p>
+        <pre><code>python -m pip install https://github.com/HAOTIANGUO22/StarBridge/releases/download/v4.4.0/starbridge-4.4.0-py3-none-any.whl</code></pre>
+        <h3>自动识别开发板</h3>
+        <pre><code>from starbridge import Board, BoardType
+
+with Board.begin(BoardType.STARCORE_V2) as board:
+    print(board.info())</code></pre>
+        <div class="note">4.4.0 同时识别 CP210x 与 CH9102。存在多个相同设备时，可传入 <code>port="COM4"</code>。</div>
+      </section>
+
+      <section id="gpio">
+        <h2>数字输入输出</h2>
+        <p>用 P0 输出高低电平，并读取板载 A 按钮。</p>
+        <pre><code>import time
+from starbridge import Board, BoardType, Pin, PinMode
+
+with Board.begin(BoardType.STARCORE_V2) as board:
+    board.pin_mode(Pin.P0, PinMode.OUTPUT)
+    board.pin_mode(Pin.BUTTON_A, PinMode.INPUT_PULLUP)
+
+    while True:
+        pressed = not board.digital_read(Pin.BUTTON_A)
+        board.digital_write(Pin.P0, pressed)
+        print("按下" if pressed else "松开")
+        time.sleep(0.05)</code></pre>
+      </section>
+
+      <section id="analog">
+        <h2>模拟量 / ADC</h2>
+        <p>P0 支持原始 ADC 数值和毫伏值读取。板载光线传感器可使用 <code>Pin.LIGHT</code>。</p>
+        <pre><code>import time
+from starbridge import Board, BoardType, Pin
+
+with Board.begin(BoardType.STARCORE_V2) as board:
+    while True:
+        raw = board.analog_read(Pin.P0)
+        millivolts = board.analog_read(Pin.P0, millivolts=True)
+        light = board.analog_read(Pin.LIGHT)
+        print(f"P0={raw}, {millivolts} mV, 光线={light}")
+        time.sleep(0.2)</code></pre>
+      </section>
+
+      <section id="dac">
+        <h2>模拟输出 / DAC</h2>
+        <p>P8/GPIO26 和 P9/GPIO25 支持 8 位 DAC，取值范围为 0–255。</p>
+        <pre><code>import time
+from starbridge import Board, BoardType, Pin
+
+with Board.begin(BoardType.STARCORE_V2) as board:
+    for value in range(0, 256, 8):
+        board.analog_write(Pin.P8, value)
+        time.sleep(0.03)
+    board.analog_write(Pin.P8, 0)</code></pre>
+      </section>
+
+      <section id="pwm">
+        <h2>PWM 与板载蜂鸣器</h2>
+        <p>以下示例在板载蜂鸣器上输出 1 kHz 方波。占空比 128 对应 8 位分辨率下约 50%。</p>
+        <pre><code>import time
+from starbridge import Board, BoardType, Pin
+
+with Board.begin(BoardType.STARCORE_V2) as board:
+    board.pwm_configure(Pin.BUZZER, frequency=1000, resolution=8)
+    board.pwm_write(Pin.BUZZER, 128)
+    time.sleep(1)
+    board.pwm_stop(Pin.BUZZER)</code></pre>
+      </section>
+
+      <section id="oled">
+        <h2>SSD1306 OLED</h2>
+        <div class="wiring">
+          <div class="wire"><b>SDA</b>P20 / GPIO23</div>
+          <div class="wire"><b>SCL</b>P19 / GPIO22</div>
+          <div class="wire"><b>地址</b>0x3C</div>
+        </div>
+        <pre><code>from starbridge import Board, BoardType
+
+with Board.begin(BoardType.STARCORE_V2) as board:
+    oled = board.oled().begin()
+    oled.clear()
+    oled.text(0, 14, "你好，StarBridge")
+    oled.rect(0, 20, 128, 30)
+    oled.line(0, 63, 127, 0)
+    oled.pixel(64, 32)
+    oled.show()
+    input("按回车退出")</code></pre>
+      </section>
+
+      <section id="dht11">
+        <h2>DHT11 温湿度</h2>
+        <div class="wiring">
+          <div class="wire"><b>DATA</b>P1</div>
+          <div class="wire"><b>VCC</b>3.3V</div>
+          <div class="wire"><b>GND</b>GND</div>
+        </div>
+        <div class="warning">DHT11 需要双向引脚。不要使用仅输入的 P2、P3、P4、P10。裸传感器通常还需要 4.7kΩ–10kΩ 上拉电阻。</div>
+        <pre><code>import time
+from starbridge import Board, BoardType, Pin
+
+with Board.begin(BoardType.STARCORE_V2) as board:
+    sensor = board.dht11(Pin.P1)
+    while True:
+        data = sensor.read()
+        print(f"温度 {data.temperature_c:.1f} °C")
+        print(f"湿度 {data.humidity_percent:.1f} %")
+        time.sleep(2)</code></pre>
+      </section>
+
+      <section id="pixels">
+        <h2>WS2812 / NeoPixel</h2>
+        <p>板载共有 3 颗 WS2812B，数据脚可用 <code>Pin.ONBOARD_PIXELS</code>。</p>
+        <pre><code>import time
+from starbridge import Board, BoardType, Pin
+
+with Board.begin(BoardType.STARCORE_V2) as board:
+    pixels = board.neopixel(Pin.ONBOARD_PIXELS, 3, brightness=64)
+    colors = [(255, 0, 0), (0, 255, 0), (0, 0, 255)]
+
+    for index, color in enumerate(colors):
+        pixels.set_pixel(index, *color)
+    pixels.show()
+    time.sleep(2)
+    pixels.clear()</code></pre>
+      </section>
+
+      <section id="ultrasonic">
+        <h2>超声波测距</h2>
+        <div class="wiring">
+          <div class="wire"><b>TRIG</b>P6</div>
+          <div class="wire"><b>ECHO</b>P7，经分压</div>
+          <div class="wire"><b>VCC</b>按模块要求</div>
+          <div class="wire"><b>GND</b>共地</div>
+        </div>
+        <div class="warning">HC-SR04 的 ECHO 通常为 5V，接入 ESP32 前必须分压至约 3.3V。物体紧贴探头会进入盲区，应捕获无回波异常。</div>
+        <pre><code>import time
+from starbridge import Board, BoardType, Pin
+from starbridge.errors import BoardCommandError
+
+with Board.begin(BoardType.STARCORE_V2) as board:
+    sonar = board.ultrasonic(Pin.P6, Pin.P7)
+    while True:
+        try:
+            print(f"距离 {sonar.read_cm():.1f} cm")
+        except BoardCommandError as error:
+            print(error)  # 过近、超出量程或没有回波时继续运行
+        time.sleep(0.5)</code></pre>
+      </section>
+
+      <section id="mp3">
+        <h2>DFR0534 MP3 模块</h2>
+        <div class="wiring">
+          <div class="wire"><b>模块 T</b>开发板 RX / P13</div>
+          <div class="wire"><b>模块 R</b>开发板 TX / P14</div>
+          <div class="wire"><b>BUSY</b>P15，可省略</div>
+          <div class="wire"><b>波特率</b>9600</div>
+        </div>
+        <pre><code>import time
+from starbridge import Board, BoardType, Pin
+
+with Board.begin(BoardType.STARCORE_V2) as board:
+    mp3 = board.mp3(Pin.P13, Pin.P14, Pin.P15)
+    mp3.set_volume(20)
+    mp3.play_track(1)
+    time.sleep(5)
+    mp3.pause()
+    time.sleep(1)
+    mp3.play()
+    print("模块状态:", mp3.status())
+    print("正在播放:", mp3.is_busy())</code></pre>
+      </section>
+
+      <section id="dashboard">
+        <h2>综合示例：环境仪表</h2>
+        <p>DHT11、超声波和 OLED 同时工作；无回波时屏幕继续刷新，不会退出程序。</p>
+        <pre><code>import time
+from starbridge import Board, BoardType, Pin
+from starbridge.errors import BoardCommandError
+
+with Board.begin(BoardType.STARCORE_V2) as board:
+    climate = board.dht11(Pin.P1)
+    sonar = board.ultrasonic(Pin.P6, Pin.P7)
+    oled = board.oled().begin()
+
+    while True:
+        reading = climate.read()
+        try:
+            distance_text = f"距离: {sonar.read_cm():.1f} cm"
+        except BoardCommandError:
+            distance_text = "距离: 过近或无回波"
+
+        oled.clear()
+        oled.text(0, 8, f"温度: {reading.temperature_c:.1f} C")
+        oled.text(0, 26, f"湿度: {reading.humidity_percent:.1f} %")
+        oled.text(0, 44, distance_text)
+        oled.show()
+        time.sleep(1)</code></pre>
+      </section>
+
+      <section id="errors">
+        <h2>异常处理</h2>
+        <p>4.4.0 的异常会直接说明功能、可能原因和处理建议，同时保留命令号与状态码供开发者排查。</p>
+        <pre><code>from starbridge import Board, BoardType, Pin
+from starbridge.errors import (
+    BoardCommandError,
+    BoardNotFoundError,
+    FirmwareInstallError,
+)
+
+try:
+    with Board.begin(BoardType.STARCORE_V2) as board:
+        print(board.dht11(Pin.P1).read())
+except BoardNotFoundError as error:
+    print("未找到开发板：", error)
+except FirmwareInstallError as error:
+    print("固件安装失败：", error)
+except BoardCommandError as error:
+    print(error)
+    print("命令号：", hex(error.command))
+    print("状态码：", error.status)</code></pre>
+      </section>
+    </main>
+  </div>
+
+  <footer>StarBridge 4.4 · StarCore V2 · 单文件离线示例手册</footer>
+  <script>
+    document.querySelectorAll("pre").forEach((block) => {
+      const button = document.createElement("button");
+      button.className = "copy";
+      button.type = "button";
+      button.textContent = "复制";
+      button.addEventListener("click", async () => {
+        const text = block.querySelector("code").textContent;
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(text);
+        } else {
+          const area = document.createElement("textarea");
+          area.value = text;
+          area.style.position = "fixed";
+          area.style.opacity = "0";
+          document.body.appendChild(area);
+          area.select();
+          document.execCommand("copy");
+          area.remove();
+        }
+        button.textContent = "已复制";
+        setTimeout(() => button.textContent = "复制", 1200);
+      });
+      block.appendChild(button);
+    });
+  </script>
+</body>
+</html>

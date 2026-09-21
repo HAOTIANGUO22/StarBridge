@@ -1,0 +1,23 @@
+[build-system]
+requires = ["hatchling>=1.24"]
+build-backend = "hatchling.build"
+
+[project]
+name = "starbridge"
+version = "4.4.0"
+description = "Python SDK for the StarBridge platform and StarCore board"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "StarBridge contributors" }]
+dependencies = []
+
+[project.optional-dependencies]
+test = ["pytest>=8,<9"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/starbridge"]
+artifacts = ["src/starbridge/_offline/**/*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
