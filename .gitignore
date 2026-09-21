@@ -9,5 +9,4 @@ build/
 .idea/
 .vscode/
 /artifacts/
-/tools/arduino-cli/
 

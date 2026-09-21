@@ -2,8 +2,6 @@ $ErrorActionPreference = 'Stop'
 
 $projectRoot = Split-Path -Parent $PSScriptRoot
 $pythonRoot = Join-Path $projectRoot 'python'
-$venvPython = Join-Path $projectRoot '.venv\Scripts\python.exe'
-$python = if (Test-Path -LiteralPath $venvPython -PathType Leaf) { $venvPython } else { 'python' }
 $offlineRoot = Join-Path $pythonRoot 'src\starbridge\_offline'
 $firmwareRoot = Join-Path $offlineRoot 'firmware\starcore-v2'
 $runtimeRoot = Join-Path $offlineRoot 'windows-x86_64'
@@ -30,13 +28,10 @@ if ($manifest.sdk_version -ne '4.4.0') {
 }
 
 New-Item -ItemType Directory -Force -Path $outputDirectory | Out-Null
-& $python -c "import sys; raise SystemExit(0 if sys.version_info >= (3, 10) else 'StarBridge requires Python 3.10 or newer.')"
-if ($LASTEXITCODE -ne 0) { throw 'A supported Python interpreter was not found.' }
-
-& $python -m build --wheel --outdir $outputDirectory $pythonRoot
+python -m build --wheel --outdir $outputDirectory $pythonRoot
 if ($LASTEXITCODE -ne 0) { throw 'StarBridge wheel build failed.' }
 
-Get-ChildItem -LiteralPath $outputDirectory -Filter 'starbridge_hardware-4.4.0-*.whl' |
+Get-ChildItem -LiteralPath $outputDirectory -Filter 'starbridge-4.4.0-*.whl' |
     Sort-Object LastWriteTime -Descending |
     Select-Object -First 1 -ExpandProperty FullName
 

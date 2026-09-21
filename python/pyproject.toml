@@ -3,35 +3,14 @@ requires = ["hatchling>=1.24"]
 build-backend = "hatchling.build"
 
 [project]
-name = "starbridge-hardware"
+name = "starbridge"
 version = "4.4.0"
 description = "Python SDK for the StarBridge platform and StarCore board"
 readme = "README.md"
 requires-python = ">=3.10"
-license = { file = "LICENSE" }
+license = { text = "MIT" }
 authors = [{ name = "StarBridge contributors" }]
-keywords = ["starbridge", "starcore", "hardware", "iot", "education", "esp32"]
-classifiers = [
-    "Development Status :: 4 - Beta",
-    "Intended Audience :: Developers",
-    "Intended Audience :: Education",
-    "License :: OSI Approved :: MIT License",
-    "Operating System :: Microsoft :: Windows",
-    "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3.12",
-    "Programming Language :: Python :: 3.13",
-    "Topic :: Education",
-    "Topic :: Software Development :: Embedded Systems",
-]
 dependencies = []
-
-[project.urls]
-Homepage = "https://github.com/HAOTIANGUO22/StarBridge"
-Documentation = "https://github.com/HAOTIANGUO22/StarBridge#readme"
-Repository = "https://github.com/HAOTIANGUO22/StarBridge"
-Issues = "https://github.com/HAOTIANGUO22/StarBridge/issues"
 
 [project.optional-dependencies]
 test = ["pytest>=8,<9"]
