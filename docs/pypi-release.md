@@ -24,11 +24,4 @@ StarBridge 的 PyPI 发行名是 `starbridge-hardware`，Python 导入名仍然�
 
 ## 正式发布
 
-从准备发布的提交创建并推送 `pypi-v版本号` 标签，例如：
-
-```powershell
-git tag pypi-v4.4.0
-git push origin pypi-v4.4.0
-```
-
-也可以在工作流进入默认分支后，从 GitHub Actions 页面手动运行 Publish Python package to PyPI。构建任务会先运行测试、生成 wheel 并检查元数据，随后通过 PyPI Trusted Publishing 上传，不需要在 GitHub 保存 API Token。
+在 GitHub 仓库打开 Actions → Publish Python package to PyPI → Run workflow。构建任务会先运行测试、生成 wheel 并检查元数据，随后通过 PyPI Trusted Publishing 上传，不需要在 GitHub 保存 API Token。
