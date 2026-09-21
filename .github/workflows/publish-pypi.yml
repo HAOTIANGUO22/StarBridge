@@ -1,6 +1,9 @@
 name: Publish Python package to PyPI
 
 on:
+  push:
+    tags:
+      - "pypi-v*"
   workflow_dispatch:
 
 jobs:
