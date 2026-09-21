@@ -1,5 +1,13 @@
 # StarBridge Python SDK 4.4
 
+Install the public distribution from PyPI:
+
+```bash
+python -m pip install starbridge-hardware
+```
+
+The PyPI distribution is named `starbridge-hardware`; the Python import package remains `starbridge`.
+
 ```python
 from starbridge import Board, BoardType, Pin, PinMode
 

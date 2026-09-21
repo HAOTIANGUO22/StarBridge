@@ -68,7 +68,10 @@ Python 程序
 项目要求 Python 3.10 或更高版本：
 
 ```powershell
-# 从 GitHub Release 安装
+# 从 PyPI 安装（发行名为 starbridge-hardware，导入名仍为 starbridge）
+python -m pip install starbridge-hardware
+
+# 也可以从 GitHub Release 安装
 python -m pip install https://github.com/HAOTIANGUO22/StarBridge/releases/download/v4.4.0/starbridge-4.4.0-py3-none-any.whl
 
 # 开发仓库中使用可编辑安装
