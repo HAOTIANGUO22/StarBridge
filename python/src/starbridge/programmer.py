@@ -189,13 +189,13 @@ class FirmwareProgrammer:
             )
         if self.firmware_root is None:
             raise FirmwareInstallError(
-                "the public SDK does not contain firmware source; reinstall the official "
-                "wheel to use its bundled binary firmware"
+                "firmware source was not found; reinstall the official wheel to use its "
+                "bundled binary firmware or run from the complete source repository"
             )
         firmware_root = self.firmware_root
         sketch = firmware_root / profile.firmware_directory
-        shared = firmware_root / "shared-libraries"
-        platform_libraries = firmware_root / "platforms" / profile.architecture / "libraries"
+        board_libraries = sketch / "libraries"
+        shared_libraries = firmware_root / "shared-libraries"
         board_package = firmware_root / "arduino-board-package"
         artifacts = self._cache_root() / "auto-flash"
         config = artifacts / "arduino-cli.yaml"
@@ -211,8 +211,8 @@ class FirmwareProgrammer:
             "--config-file", str(config),
             "--fqbn", profile.fqbn,
             "--warnings", "all",
-            "--libraries", str(shared),
-            "--libraries", str(platform_libraries),
+            "--libraries", str(board_libraries),
+            "--libraries", str(shared_libraries),
             "--build-path", str(build_path),
             str(sketch),
         ))
@@ -229,6 +229,14 @@ class FirmwareProgrammer:
             raise FirmwareInstallError(f"invalid bundled firmware manifest: {error}") from error
         if manifest.get("format") != 1 or manifest.get("board") != profile.type.value:
             raise FirmwareInstallError("bundled firmware manifest does not match the selected board")
+
+        if profile.architecture == "avr":
+            self._flash_precompiled_avr(profile, port, bundle, manifest)
+            return
+        if profile.architecture != "esp32":
+            raise FirmwareInstallError(
+                f"unsupported bundled firmware architecture: {profile.architecture}"
+            )
 
         esptool = self._offline_root() / "windows-x86_64" / "esptool.exe"
         if not esptool.is_file():
@@ -264,6 +272,48 @@ class FirmwareProgrammer:
             "--flash-freq", "keep",
             "--flash-size", "keep",
             *images,
+        )
+        self._run_flash_process(
+            command,
+            profile,
+            port,
+            str(manifest.get("firmware_version", "4.x")),
+        )
+
+    def _flash_precompiled_avr(
+        self,
+        profile: BoardProfile,
+        port: str,
+        bundle: Path,
+        manifest: dict[str, object],
+    ) -> None:
+        runtime = self._offline_root() / "windows-x86_64"
+        avrdude = runtime / "avrdude.exe"
+        config = runtime / "avrdude.conf"
+        if not avrdude.is_file() or not config.is_file():
+            raise FirmwareInstallError("the bundled Windows avrdude runtime is missing")
+
+        image = manifest.get("image")
+        if not isinstance(image, dict):
+            raise FirmwareInstallError("bundled AVR firmware image is missing")
+        filename = image.get("file")
+        expected_hash = image.get("sha256")
+        path = bundle / filename if isinstance(filename, str) else bundle / ""
+        if not path.is_file() or not isinstance(expected_hash, str):
+            raise FirmwareInstallError("bundled AVR firmware image is invalid")
+        actual_hash = hashlib.sha256(path.read_bytes()).hexdigest()
+        if actual_hash != expected_hash.casefold():
+            raise FirmwareInstallError(f"bundled firmware checksum failed for {filename}")
+
+        command = (
+            str(avrdude),
+            "-C", str(config),
+            "-p", str(manifest.get("mcu", "atmega328p")),
+            "-c", str(manifest.get("programmer", "arduino")),
+            "-P", port,
+            "-b", str(manifest.get("baud", 115200)),
+            "-D",
+            "-U", f"flash:w:{path}:i",
         )
         self._run_flash_process(
             command,

@@ -1,0 +1,7 @@
+name=StarBridge ESP32 Boards
+version=4.0.0
+
+# The board definitions and variants live in this package, while compiler
+# recipes, tools, partitions, cores and bundled libraries come from the
+# referenced official esp32:esp32 platform.
+runtime.use_core_platform_path_for_runtime_platform_path=true

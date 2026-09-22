@@ -1,4 +1,4 @@
-# StarBridge Python SDK 4.4
+# StarBridge Python SDK 4.5.0
 
 Install the public distribution from PyPI:
 
@@ -18,12 +18,17 @@ with Board.begin(BoardType.STARCORE_V2) as board:
 
     print(board.dht11(Pin.P1).read())
     print(board.ultrasonic(Pin.P6, Pin.P7).read_cm())
+
+    nfc = board.pn532().begin()
+    print("PN532 UID:", nfc.scan())
 ```
 
 The SDK communicates with protocol-v2 firmware. It does not silently fall back to the legacy protocol.
 
-`Board.begin()` detects the serial port and reuses compatible firmware. On Windows, the official wheel contains precompiled StarCore V2 firmware and esptool, so first-time provisioning works without Arduino IDE, Arduino CLI, an installed ESP32 core, or firmware source. Pass `port="COM7"` to override discovery or `force_flash=True` to request a new upload.
+`Board.begin()` detects the serial port and reuses compatible firmware. On Windows, the official wheel contains precompiled StarCore V2 and StarDust firmware plus esptool and avrdude, so first-time provisioning works without Arduino IDE, Arduino CLI, installed board cores, or firmware source. Pass `port="COM7"` to override discovery or `force_flash=True` to request a new upload.
 
-The wheel includes only the public Python SDK, precompiled flash images, their integrity manifest, and the Windows x86-64 esptool runtime. Firmware production source is maintained separately and is not distributed in this repository or wheel.
+The wheel includes only the public Python SDK, precompiled flash images, their integrity manifests, and the Windows x86-64 flashing runtimes. Firmware production source remains in the repository's `firmware/` tree and is not copied into the wheel.
 
-Version 4.4 recognizes both CP210x and CH9102 USB-to-serial bridges. First-time flashing displays the StarBridge, SDK and firmware versions plus a progress bar. Hardware command failures include Chinese troubleshooting guidance while retaining the numeric command and status for diagnostics.
+StarDust users select `BoardType.STARDUST` and use `StardustPin` for D2, D3, D5, D6, D9, D10, and A0-A3. See `docs/stardust-pinout.md` for its fixed AVR PWM frequencies and limitations.
+
+Version 4.5.0 adds native ESP32 Wi-Fi, ESP-NOW, software serial and SNTP support, plus dependency-free host-side clients for time, weather, speech transcription and OpenAI-compatible chat APIs. Version 4.4.1 introduced generic PN532 NFC over I2C.

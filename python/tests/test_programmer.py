@@ -7,7 +7,7 @@ from types import SimpleNamespace
 import unittest
 from unittest.mock import Mock, patch
 
-from starbridge import Board, BoardType
+from starbridge import Board, BoardType, StardustPin
 from starbridge.boards import get_board_profile
 from starbridge.errors import (
     BoardNotFoundError,
@@ -20,10 +20,17 @@ from starbridge.programmer import FirmwareProgrammer, discover_port
 class ProgrammerTests(unittest.TestCase):
     def test_profiles_distinguish_board_architectures(self) -> None:
         starcore = get_board_profile(BoardType.STARCORE_V2)
+        stardust = get_board_profile(BoardType.STARDUST)
         uno = get_board_profile(BoardType.ARDUINO_UNO)
         self.assertEqual(starcore.fqbn, "starbridge:esp32:starcore_v2")
         self.assertEqual(starcore.architecture, "esp32")
         self.assertTrue(starcore.has_firmware)
+        self.assertEqual(stardust.fqbn, "starbridge:avr:stardust")
+        self.assertEqual(stardust.architecture, "avr")
+        self.assertEqual(stardust.board_id, 3)
+        self.assertTrue(stardust.has_firmware)
+        self.assertEqual(stardust.minimum_firmware_version, (4, 3, 1))
+        self.assertEqual(int(StardustPin.A3), 17)
         self.assertEqual(uno.fqbn, "arduino:avr:uno")
         self.assertFalse(uno.has_firmware)
 
@@ -59,6 +66,19 @@ class ProgrammerTests(unittest.TestCase):
         self.assertEqual(discover_port(get_board_profile("starcore-v2")), "COM4")
 
     @patch("starbridge.programmer.list_ports.comports")
+    def test_stardust_discovery_supports_ch340(self, comports) -> None:
+        comports.return_value = [
+            SimpleNamespace(
+                device="COM6",
+                vid=0x1A86,
+                pid=0x7523,
+                description="USB-SERIAL CH340",
+                manufacturer="wch.cn",
+            ),
+        ]
+        self.assertEqual(discover_port(get_board_profile("stardust")), "COM6")
+
+    @patch("starbridge.programmer.list_ports.comports")
     def test_ambiguous_ports_require_explicit_selection(self, comports) -> None:
         comports.return_value = [
             SimpleNamespace(device="COM7", vid=0x10C4, pid=0xEA60,
@@ -83,8 +103,7 @@ class ProgrammerTests(unittest.TestCase):
             root = Path(directory)
             (root / "firmware" / "arduino-board-package").mkdir(parents=True)
             (root / "firmware" / "starcore-v2").mkdir()
-            (root / "firmware" / "shared-libraries").mkdir()
-            (root / "firmware" / "platforms" / "esp32" / "libraries").mkdir(parents=True)
+            (root / "firmware" / "starcore-v2" / "libraries").mkdir()
             cli = root / "arduino-cli.exe"
             cli.touch()
             programmer = FirmwareProgrammer(root, cli)
@@ -94,9 +113,8 @@ class ProgrammerTests(unittest.TestCase):
             self.assertIn("--upload", compile_call)
             self.assertIn("COM7", compile_call)
             resolved = programmer.firmware_root
+            self.assertIn(str(resolved / "starcore-v2" / "libraries"), compile_call)
             self.assertIn(str(resolved / "shared-libraries"), compile_call)
-            self.assertIn(str(resolved / "platforms" / "esp32" / "libraries"),
-                          compile_call)
 
     def test_direct_packaged_firmware_directory_is_supported(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
@@ -106,6 +124,22 @@ class ProgrammerTests(unittest.TestCase):
             cli.touch()
             programmer = FirmwareProgrammer(firmware, cli)
             self.assertEqual(programmer.firmware_root, firmware.resolve())
+
+    def test_stardust_source_flash_uses_custom_fqbn(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "firmware" / "arduino-board-package").mkdir(parents=True)
+            (root / "firmware" / "stardust" / "libraries").mkdir(parents=True)
+            cli = root / "arduino-cli.exe"
+            cli.touch()
+            programmer = FirmwareProgrammer(root, cli)
+            programmer._run = Mock()
+
+            programmer.flash(get_board_profile("stardust"), "COM6")
+
+            compile_call = programmer._run.call_args_list[-1].args[0]
+            self.assertIn("starbridge:avr:stardust", compile_call)
+            self.assertIn("COM6", compile_call)
 
     @patch("starbridge.programmer.os.name", "nt")
     def test_project_local_arduino_cli_is_detected(self) -> None:
@@ -166,6 +200,46 @@ class ProgrammerTests(unittest.TestCase):
             self.assertEqual(port, "COM7")
             self.assertEqual(firmware_version, "4.x")
 
+    @patch("starbridge.programmer.os.name", "nt")
+    def test_bundled_stardust_firmware_uses_avrdude(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            offline = root / "offline"
+            bundle = offline / "firmware" / "stardust"
+            runtime = offline / "windows-x86_64"
+            bundle.mkdir(parents=True)
+            runtime.mkdir(parents=True)
+            (runtime / "avrdude.exe").touch()
+            (runtime / "avrdude.conf").touch()
+            image = bundle / "firmware.hex"
+            image.write_text(":00000001FF\n", encoding="ascii")
+            (bundle / "manifest.json").write_text(json.dumps({
+                "format": 1,
+                "board": "stardust",
+                "architecture": "avr",
+                "firmware_version": "4.3.0",
+                "mcu": "atmega328p",
+                "programmer": "arduino",
+                "baud": 115200,
+                "image": {
+                    "file": "firmware.hex",
+                    "sha256": hashlib.sha256(image.read_bytes()).hexdigest(),
+                },
+            }), encoding="utf-8")
+
+            with patch.object(FirmwareProgrammer, "_offline_root", return_value=offline):
+                programmer = FirmwareProgrammer(root)
+                programmer._run_flash_process = Mock()
+                programmer.flash(get_board_profile("stardust"), "COM6")
+
+            command, profile, port, firmware_version = programmer._run_flash_process.call_args.args
+            self.assertEqual(command[0], str(runtime / "avrdude.exe"))
+            self.assertIn("atmega328p", command)
+            self.assertIn("flash:w:", " ".join(command))
+            self.assertEqual(profile.type, BoardType.STARDUST)
+            self.assertEqual(port, "COM6")
+            self.assertEqual(firmware_version, "4.3.0")
+
     @patch("starbridge.programmer.subprocess.Popen")
     def test_flash_progress_displays_brand_version_and_completion(self, popen) -> None:
         process = Mock()
@@ -186,7 +260,7 @@ class ProgrammerTests(unittest.TestCase):
             )
 
         text = output.getvalue()
-        self.assertIn("StarBridge 4.4.0", text)
+        self.assertIn("StarBridge 4.5.0", text)
         self.assertIn("固件 4.0.0", text)
         self.assertIn("100%", text)
         self.assertIn("烧录完成", text)

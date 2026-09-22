@@ -28,17 +28,18 @@ jobs:
         shell: pwsh
         run: ./tools/verify.ps1
 
-      - name: Build wheel
-        run: python -m build --wheel --outdir dist python
+      - name: Compile firmware and build wheel
+        shell: pwsh
+        run: ./tools/build-wheel.ps1
 
       - name: Validate wheel metadata
-        run: python -m twine check dist/*
+        run: python -m twine check artifacts/dist/*.whl
 
       - name: Upload distribution artifact
         uses: actions/upload-artifact@v4
         with:
           name: python-package-distributions
-          path: dist/
+          path: artifacts/dist/*.whl
           if-no-files-found: error
 
   publish:

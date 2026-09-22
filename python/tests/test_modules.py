@@ -15,6 +15,14 @@ def handler(request):
         return Status.OK, b"\x02"
     if request.command == Command.MP3_BUSY:
         return Status.OK, b"\x01"
+    if request.command in (Command.PN532_INIT, Command.PN532_FIRMWARE_VERSION):
+        return Status.OK, struct.pack("<I", 0x32010607)
+    if request.command == Command.PN532_SCAN:
+        return Status.OK, b"\x04\xde\xad\xbe\xef"
+    if request.command == Command.PN532_CLASSIC_READ:
+        return Status.OK, bytes(range(16))
+    if request.command == Command.PN532_PAGE_READ:
+        return Status.OK, b"NFC!"
     return Status.OK, b""
 
 
@@ -56,6 +64,38 @@ class ModuleTests(unittest.TestCase):
         mp3.previous()
         self.assertEqual(mp3.status(), 2)
         self.assertTrue(mp3.is_busy())
+
+    def test_pn532_i2c_commands(self) -> None:
+        nfc = self.board.pn532(reset_pin=Pin.P0).begin()
+        self.assertEqual(nfc.firmware_info().ic, 0x32)
+        self.assertEqual(nfc.scan(), bytes.fromhex("DE AD BE EF"))
+        self.assertEqual(nfc.read_mifare_classic(4), bytes(range(16)))
+        nfc.write_mifare_classic(4, bytes(16))
+        self.assertEqual(nfc.read_page(4), b"NFC!")
+        nfc.write_page(4, b"test")
+
+        commands = [frame[6] for frame in self.transport.writes]
+        self.assertEqual(
+            commands,
+            [
+                Command.PN532_INIT,
+                Command.PN532_FIRMWARE_VERSION,
+                Command.PN532_SCAN,
+                Command.PN532_CLASSIC_READ,
+                Command.PN532_CLASSIC_WRITE,
+                Command.PN532_PAGE_READ,
+                Command.PN532_PAGE_WRITE,
+            ],
+        )
+
+    def test_pn532_write_guards(self) -> None:
+        nfc = self.board.nfc()
+        with self.assertRaises(ValueError):
+            nfc.write_mifare_classic(3, bytes(16))
+        with self.assertRaises(ValueError):
+            nfc.write_page(2, bytes(4))
+        with self.assertRaises(ValueError):
+            nfc.read_mifare_classic(1, key=b"short")
 
     def test_validation(self) -> None:
         with self.assertRaises(ValueError):

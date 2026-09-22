@@ -1,0 +1,34 @@
+# StarBridge AVR board definitions. This package reuses arduino:avr.
+
+stardust.name=StarDust (星尘板)
+
+stardust.vid.0=0x1A86
+stardust.pid.0=0x7523
+stardust.upload_port.0.vid=0x1A86
+stardust.upload_port.0.pid=0x7523
+
+stardust.upload.tool=arduino:avrdude
+stardust.upload.tool.default=arduino:avrdude
+stardust.upload.protocol=arduino
+stardust.upload.maximum_size=32256
+stardust.upload.maximum_data_size=2048
+stardust.upload.speed=115200
+
+stardust.bootloader.tool=arduino:avrdude
+stardust.bootloader.tool.default=arduino:avrdude
+stardust.bootloader.low_fuses=0xFF
+stardust.bootloader.high_fuses=0xDE
+stardust.bootloader.extended_fuses=0xFD
+stardust.bootloader.unlock_bits=0x3F
+stardust.bootloader.lock_bits=0x0F
+stardust.bootloader.file=optiboot/optiboot_atmega328.hex
+
+stardust.build.mcu=atmega328p
+stardust.build.f_cpu=16000000L
+stardust.build.board=STARBRIDGE_STARDUST
+stardust.build.core=arduino:arduino
+stardust.build.variant=stardust
+stardust.build.extra_flags=-DSTARBRIDGE_BOARD_STARDUST=1
+stardust.compiler.c.extra_flags=-mcall-prologues
+stardust.compiler.cpp.extra_flags=-mcall-prologues
+stardust.compiler.c.elf.extra_flags=-Wl,--relax

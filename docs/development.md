@@ -1,32 +1,18 @@
-# 公开 SDK 开发指南
+# 开发与维护入口
 
-本仓库负责 StarBridge 的公开 Python API、通信协议、用户文档、示例和经过校验的预编译固件制品。
+本仓库同时维护 Python SDK、星核板 V2 与星尘板下位机固件、离线烧录资源和发布脚本。
 
-## 可公开修改的范围
+完整的目录职责、星核板 V2 新功能流程、Arduino Uno 等新板型接入步骤、第三方库规则以及 AI 检查表统一记录在根目录的 [工程维护指南](../MAINTENANCE.md)。后续修改不得另建相互矛盾的目录规则。
 
-- `python/src/starbridge/`：Python SDK、串口通信和用户级外设 API。
-- `python/tests/`：公开 SDK 与协议测试。
-- `docs/`：协议、引脚、示例和排障文档。
-- `tools/`：公开 wheel 的验证和打包脚本。
-
-## 固件边界
-
-下位机 C/C++ 生产源码、板卡定义、Arduino 依赖和固件构建流程在私有仓库维护。私有流程输出 `_offline` 目录，公开流程只校验并打包以下制品：
-
-```text
-firmware/starcore-v2/*.bin
-firmware/starcore-v2/manifest.json
-windows-x86_64/esptool.exe
-windows-x86_64/ESPTOOL_LICENSE.txt
-```
-
-公开仓库不接受下位机源文件、构建缓存或签名密钥。
-
-## 验证
+常用命令：
 
 ```powershell
+# Python 测试 + 星核板 V2/星尘板固件编译
 .\tools\verify.ps1
-.\tools\build-wheel.ps1
-```
 
-发布前必须确认 wheel 不包含 `.c`、`.cpp`、`.h`、`.ino`、Arduino 板卡包或私有构建脚本。
+# 编译固件、刷新 Python 离线资源并构建 wheel
+.\tools\build-wheel.ps1
+
+# 清理 Python 测试和构建缓存（保留 artifacts/dist）
+.\tools\clean.ps1
+```

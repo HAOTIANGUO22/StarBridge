@@ -4,13 +4,13 @@ build-backend = "hatchling.build"
 
 [project]
 name = "starbridge-hardware"
-version = "4.4.0"
-description = "Python SDK for the StarBridge platform and StarCore board"
+version = "4.5.0"
+description = "Python SDK and offline firmware for StarBridge StarCore and StarDust boards"
 readme = "README.md"
 requires-python = ">=3.10"
 license = { file = "LICENSE" }
 authors = [{ name = "StarBridge contributors" }]
-keywords = ["starbridge", "starcore", "hardware", "iot", "education", "esp32"]
+keywords = ["starbridge", "starcore", "stardust", "hardware", "iot", "education", "esp32", "avr", "arduino"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",

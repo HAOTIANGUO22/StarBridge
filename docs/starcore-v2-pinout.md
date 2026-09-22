@@ -57,4 +57,4 @@ Pin.I2C_SCL          # P19 / GPIO22
 Pin.I2C_SDA          # P20 / GPIO23
 ```
 
-板载 OLED 与其他 I²C 器件统一使用 SDA GPIO23、SCL GPIO22。麦克风 GPIO38 只加入 ADC 输入集合，不作为普通数字输出使用。
+板载 OLED、PN532 与其他 I²C 器件统一使用 SDA GPIO23、SCL GPIO22。PN532 使用标准 7 位地址 `0x24`，模块必须切换到 I²C 模式；IRQ 和 RSTPD_N 为可选连接。麦克风 GPIO38 只加入 ADC 输入集合，不作为普通数字输出使用。

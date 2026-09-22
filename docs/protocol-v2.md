@@ -17,6 +17,10 @@ All multi-byte integers use little-endian byte order. The PC is the requester; t
 
 Response payload byte zero is always a status code. Remaining bytes are response data.
 
+## Capability bits
+
+`GET_INFO` 的 capability `u32` 按位表示功能组：bit 0 GPIO、bit 1 ADC/DAC、bit 2 PWM、bit 3 OLED、bit 4 DHT11、bit 5 NeoPixel、bit 6 超声波、bit 7 MP3、bit 8 板级服务（保留）、bit 9 PN532、bit 10 软件串口、bit 11 Wi-Fi、bit 12 ESP-NOW、bit 13 网络时间。星核板 V2 返回 `0x00003FFF`；星尘板 4.3.1 返回 `0x000006FF`。具体命令不受某块板支持时必须返回 `UNSUPPORTED`。
+
 ## Status codes
 
 | Value | Name | Meaning |
@@ -67,12 +71,42 @@ Response payload byte zero is always a status code. Remaining bytes are response
 | `77` | MP3_SET_VOLUME | volume `u8` (0–30) | empty |
 | `78` | MP3_STATUS | empty | module status `u8` |
 | `79` | MP3_BUSY | empty | busy `u8` |
+| `80` | PN532_INIT | IRQ pin or `FF`, RSTPD_N pin or `FF` | chip, firmware major, minor, support (`u32`) |
+| `81` | PN532_FIRMWARE_VERSION | empty | chip, firmware major, minor, support (`u32`) |
+| `82` | PN532_SCAN | timeout ms `u16` (1–800) | UID length `u8`, UID bytes; zero length means no tag |
+| `83` | PN532_CLASSIC_READ | block, key B flag, 6-byte key | 16-byte block |
+| `84` | PN532_CLASSIC_WRITE | block, key B flag, 6-byte key, 16-byte block | empty |
+| `85` | PN532_PAGE_READ | page `u8` | 4-byte NTAG/Ultralight page |
+| `86` | PN532_PAGE_WRITE | page `u8`, 4-byte data | empty |
+| `90` | SOFTWARE_SERIAL_INIT | RX pin, TX pin, baud `u32` | empty |
+| `91` | SOFTWARE_SERIAL_WRITE | 1–255 data bytes | empty |
+| `92` | SOFTWARE_SERIAL_READ | maximum `u8`, timeout ms `u16` | received bytes |
+| `93` | SOFTWARE_SERIAL_AVAILABLE | empty | buffered byte count `u16` |
+| `94` | SOFTWARE_SERIAL_END | empty | empty |
+| `A0` | WIFI_CONNECT | timeout ms `u16`, SSID length, password length, UTF-8 strings | status, IPv4, RSSI `i32`, MAC, channel |
+| `A1` | WIFI_DISCONNECT | erase credentials flag | empty |
+| `A2` | WIFI_STATUS | empty | status, IPv4, RSSI `i32`, MAC, channel |
+| `B0` | ESPNOW_INIT | channel (0 keeps current) | empty |
+| `B1` | ESPNOW_ADD_PEER | MAC, channel, encrypt flag, 16-byte LMK | empty |
+| `B2` | ESPNOW_REMOVE_PEER | MAC | empty |
+| `B3` | ESPNOW_SEND | MAC, 1–240 data bytes | empty |
+| `B4` | ESPNOW_RECEIVE | empty | MAC, RSSI, channel, length, data; `BUSY` if empty |
+| `B5` | ESPNOW_LOCAL_MAC | empty | 6-byte STA MAC |
+| `C0` | TIME_SYNC | UTC offset `i32`, DST offset `i32`, timeout `u16`, server length and ASCII server | Unix time `u64` |
+| `C1` | TIME_NOW | empty | Unix time `u64` |
 
 Pin mode values are input `0`, output `1`, input-pullup `2`, and input-pulldown `3`.
+
+星尘板只接受 D2、D3、D5、D6、D9、D10 和 A0-A3（数值 14-17）。其 AVR PWM 分辨率固定为 8 位：D3/D9/D10 的 `PWM_CONFIGURE` 频率必须为 490 Hz，D5/D6 必须为 980 Hz。
+星尘板的专用 I²C 接口是 SDA=A4、SCL=A5，不列入通用 GPIO 白名单。其 OLED 使用 411 字常用中文子集与分页命令队列，不支持 `OLED_BITMAP`；WS2812 上限 16 颗；MP3 串口和通用软件串口互斥。
 
 OLED font `0` is ASCII 6×12. Font `1` is the DFRobot U8g2 WenQuanYi 12px GB2312 font. Drawing commands update the in-memory framebuffer; `OLED_SHOW` flushes it to the SSD1306 display. Large bitmaps are divided into horizontal strips by the Python SDK.
 
 The NeoPixel driver controls one active WS2812 strip at a time and uses GRB/800 kHz ordering; its reserved white byte is ignored by the RGB driver. `MP3_INIT` creates a real ESP32 software UART at 9600 baud. Pin names are from the ESP32 viewpoint: RX connects to DFR0534 `T`, TX connects to DFR0534 `R`. The optional BUSY input is high while audio is playing.
+
+The PN532 driver uses the chip's standard I²C address `0x24` on P20/SDA and P19/SCL. Readiness is polled through the PN532 I²C status byte, so IRQ is optional. `PN532_INIT` verifies chip ID `0x32`, configures SAM normal mode, and limits passive-target retries so a missing tag does not block the serial protocol indefinitely. The Python SDK blocks sector-trailer and manufacturer/configuration-page writes by default.
+
+Wi-Fi and ESP-NOW use the ESP32 Arduino core's native radio stack. When Wi-Fi is connected, ESP-NOW must use the access point's channel. SNTP uses `configTime`; cloud HTTP APIs are deliberately implemented in the Python SDK so credentials are not embedded in firmware.
 
 ## Recovery rules
 

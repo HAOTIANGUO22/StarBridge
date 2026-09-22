@@ -32,14 +32,19 @@ class ProtocolClient:
         self._sequence = (self._sequence % 0xFFFF) + 1
         return self._sequence
 
-    def request(self, command: Command | int, payload: bytes = b"") -> bytes:
+    def request(
+        self, command: Command | int, payload: bytes = b"", *, timeout: float | None = None
+    ) -> bytes:
         with self._lock:
             if not self.transport.is_open:
                 raise ConnectionClosedError("transport is closed")
             sequence = self._next_sequence()
             request = Frame(FrameKind.REQUEST, sequence, int(command), payload)
             self.transport.write(request.encode())
-            deadline = time.monotonic() + self.timeout
+            request_timeout = self.timeout if timeout is None else timeout
+            if request_timeout <= 0:
+                raise ValueError("timeout must be positive")
+            deadline = time.monotonic() + request_timeout
             while True:
                 response = self._take_response(sequence, int(command))
                 if response is not None:
@@ -47,7 +52,7 @@ class ProtocolClient:
                 remaining = deadline - time.monotonic()
                 if remaining <= 0:
                     raise RequestTimeoutError(
-                        f"{command_name(int(command))}超时：开发板在 {self.timeout:.1f} 秒内没有响应。"
+                        f"{command_name(int(command))}超时：开发板在 {request_timeout:.1f} 秒内没有响应。"
                         "请检查 USB 连接、串口是否被其他程序占用，然后重新插拔开发板。"
                     )
                 chunk = self.transport.read(64, min(remaining, 0.05))

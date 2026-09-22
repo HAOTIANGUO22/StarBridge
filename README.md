@@ -18,7 +18,8 @@ Python 程序
     ├── DHT11
     ├── WS2812
     ├── 超声波传感器
-    └── DFR0534 MP3
+    ├── DFR0534 MP3
+    └── PN532 NFC（I²C）
 ```
 
 项目包含以下部分：
@@ -28,7 +29,7 @@ Python 程序
 - 预编译开发板固件：随官方 wheel 分发，用于首次自动烧录。
 - 自动测试与构建脚本：检查 Python SDK 并生成可安装 wheel。
 
-本公开仓库提供用户开发所需的 API、协议、文档和预编译固件。下位机固件生产源码在独立私有仓库维护，不包含在源码仓库或 wheel 中。
+本仓库统一维护 Python API、通信协议、星核板 V2 下位机生产源码、板级依赖和预编译发布固件。wheel 只携带编译后的离线烧录资源，不携带 C/C++ 源码。
 
 ## 支持的开发板
 
@@ -37,6 +38,7 @@ Python 程序
 | 开发板 | MCU | 支持状态 |
 |---|---|---|
 | 星核板 V2 | ESP32 | 正式支持 |
+| 星尘板 StarDust | ATmega328P / CH340 | 固件与离线烧录支持，实机待测 |
 
 项目采用多板型结构。不同开发板拥有独立固件和引脚定义，共享同一套通信协议与 Python SDK。Arduino Uno、其他 ESP32 型号和更多架构可以作为新的目标板加入。
 
@@ -54,10 +56,13 @@ Python 程序
 - 超声波距离测量
 - DFR0534 MP3 播放模块控制
 - 软件串口 MP3 通信
+- 通用 PN532 NFC 寻卡、UID、MIFARE Classic 和 NTAG/Ultralight 读写
+- ESP32 原生 Wi-Fi、ESP-NOW、SNTP 网络时间与通用软串口
+- Python 主机侧天气、时区时间、语音识别和 OpenAI 兼容大模型 API
 - 固件版本、板型和能力查询
 - 外设状态统一复位
 
-完整命令定义见 [StarBridge Protocol V2](docs/protocol-v2.md)。引脚对应关系见 [星核板 V2 引脚定义](docs/starcore-v2-pinout.md)。
+完整命令定义见 [StarBridge Protocol V2](docs/protocol-v2.md)。引脚对应关系见 [星核板 V2 引脚定义](docs/starcore-v2-pinout.md) 和 [星尘板引脚与板卡参数](docs/stardust-pinout.md)。
 
 全部元器件示例见 [HTML 示例手册](docs/examples.html)，实机测试发现与待办见 [测试问题记录](docs/test-findings.md)。
 
@@ -72,26 +77,26 @@ Python 程序
 python -m pip install starbridge-hardware
 
 # 也可以从 GitHub Release 安装
-python -m pip install https://github.com/HAOTIANGUO22/StarBridge/releases/download/v4.4.0/starbridge-4.4.0-py3-none-any.whl
+python -m pip install https://github.com/HAOTIANGUO22/StarBridge/releases/download/v4.5.0/starbridge_hardware-4.5.0-py3-none-any.whl
 
 # 开发仓库中使用可编辑安装
 python -m pip install -e .\python
 ```
 
-Windows wheel 已包含用 ESP32 Core 3.3.11 编译的 StarCore V2 固件和官方 esptool 5.3.1。用户安装这一个 wheel 后，`Board.begin()` 可在无 Arduino IDE、Arduino CLI 或 ESP32 Core 的电脑上自动烧录。
+Windows wheel 已包含 StarCore V2 和 StarDust 的预编译固件，以及 esptool 与 avrdude 离线烧录器。用户安装这一个 wheel 后，`Board.begin()` 可在无 Arduino IDE、Arduino CLI 或板卡 Core 的电脑上自动烧录。
 
-如需从公开仓库重新打包已有的预编译资源，先安装 `build`，再执行：
+如需从源码重新编译固件并构建 wheel，先安装 `build`，再执行：
 
 ```powershell
 python -m pip install build
 .\tools\build-wheel.ps1
 ```
 
-构建脚本会校验私有构建流程交付的固件包，然后将预编译镜像和烧录器装入 wheel。公开构建过程不会包含或重新编译下位机源码。
+构建脚本会准备固定版本的 Arduino CLI、ESP32 Core 与 Arduino AVR Core，编译 `firmware/starcore-v2` 和 `firmware/stardust`，刷新 Python 包内的离线固件和 manifest 哈希，然后将预编译镜像与烧录器装入 wheel。
 
 ### 2. 无需准备额外烧录环境
 
-安装官方 Windows wheel 后，不需要 Arduino IDE、Arduino CLI、ESP32 Core 或固件源码。首次连接时 SDK 会使用 wheel 内置的校验清单、固件镜像和烧录器完成部署。
+安装官方 Windows wheel 后，不需要 Arduino IDE、Arduino CLI、ESP32/AVR Core 或固件源码。首次连接时 SDK 会使用 wheel 内置的校验清单、固件镜像和烧录器完成部署。
 
 ### 3. 声明板型并开始使用
 
@@ -130,7 +135,7 @@ board = Board.begin(
 )
 ```
 
-Arduino Uno 已进入板型注册表，可以使用 `BoardType.ARDUINO_UNO` 声明；在 Uno 固件加入项目之前，SDK 会明确报告该目标尚未实现，不会把 ESP32 固件烧入 Uno。
+星尘板使用 `BoardType.STARDUST` 和 `StardustPin`，支持 D2、D3、D5、D6、D9、D10、A0-A3 的 GPIO，A0-A3 ADC、固定频率 8 位 PWM、DHT11、超声波测距、最多 16 颗 WS2812、SSD1306 OLED 常用中文、PN532 I²C、DFR0534 MP3 和通用软件串口。专用 I²C 口为 SDA=A4、SCL=A5。Arduino Uno 仍作为未实现的通用板型占位，不会被错误烧录。
 
 ## OLED 中文显示
 
@@ -161,15 +166,63 @@ with Board.begin(BoardType.STARCORE_V2) as board:
     mp3.play_track(1)
 ```
 
+## PN532 NFC（I²C）
+
+将 PN532 模块切换到 I²C 模式，SDA 接 P20、SCL 接 P19。IRQ 和 RSTPD_N 可不接；若模块上电后无法唤醒，可把 RSTPD_N 接到一个可输出引脚并传给 `reset_pin`。
+
+```python
+from starbridge import Board, BoardType, Pin
+
+with Board.begin(BoardType.STARCORE_V2) as board:
+    nfc = board.pn532(reset_pin=Pin.P0).begin()
+    uid = nfc.scan()
+    print(None if uid is None else uid.hex("-").upper())
+
+    # NTAG / MIFARE Ultralight：每页 4 字节
+    if uid is not None:
+        print(nfc.read_page(4))
+```
+
+## Wi-Fi、ESP-NOW、软串口与云 API
+
+```python
+from starbridge import Board, BoardType, CloudClient, Pin
+
+with Board.begin(BoardType.STARCORE_V2) as board:
+    wifi = board.wifi()
+    print(wifi.connect("你的 2.4G Wi-Fi", "密码"))
+    print(board.network_time().synchronize(utc_offset=8 * 3600))
+
+    radio = board.espnow()  # Wi-Fi 已连接时沿用同一信道
+    radio.add_peer("AA:BB:CC:DD:EE:FF")
+    radio.send("AA:BB:CC:DD:EE:FF", b"hello")
+
+    uart = board.software_serial(Pin.P6, Pin.P7, 9600)
+    uart.write(b"AT\r\n")
+
+cloud = CloudClient()
+print(cloud.weather(31.2304, 121.4737))
+print(cloud.time("Asia/Shanghai"))
+print(cloud.chat("用一句话介绍上海"))  # 从 OPENAI_API_KEY 读取密钥
+print(cloud.transcribe("recording.wav"))
+```
+
+云 API 运行在电脑端；不要把 API 密钥写进固件或提交到 Git。`CloudClient` 只使用 Python 标准库，不新增运行时依赖。
+
 ## 目录结构
 
 ```text
-docs/                              协议、引脚和开发文档
+firmware/
+  arduino-board-package/           StarBridge Arduino 板卡定义
+  starcore-v2/                     星核板 V2 固件源码、驱动和专用库
+  stardust/                        星尘板 AVR 固件源码
 python/
-  src/starbridge/                  Python SDK 与预编译离线资源
+  src/starbridge/                  Python SDK 与构建生成的离线资源
   tests/                           SDK 与协议自动测试
-tools/build-wheel.ps1              构建公开安装包
-tools/verify.ps1                   验证公开 SDK
+docs/                              协议、引脚、示例、测试和发布文档
+tools/                             工具链、验证、构建与清理脚本
+artifacts/                         可删除、可重建的构建产物
+MAINTENANCE.md                     后续人类与 AI 的维护规则
 ```
 
 ## 验证工程
@@ -178,9 +231,9 @@ tools/verify.ps1                   验证公开 SDK
 .\tools\verify.ps1
 ```
 
-该脚本会运行 Python 自动测试并检查公开 SDK 源码。下位机固件在私有构建流程中单独编译和验证。
+该脚本会运行 Python 自动测试、字节码检查，并完整编译星核板 V2 与星尘板固件。
 
-开发目录约定见 [开发指南](docs/development.md)，后续功能规划见 [路线图](docs/roadmap.md)。
+新增星核板功能或 Arduino Uno 等新板型前，必须先阅读 [工程维护指南](MAINTENANCE.md)。简要开发入口见 [开发指南](docs/development.md)，后续功能规划见 [路线图](docs/roadmap.md)。
 
 ## 许可证
 

@@ -1,11 +1,11 @@
 {
-  "esp32_core_version": "3.3.11",
-  "sdk_version": "4.4.0",
   "chip": "esp32",
+  "sdk_version": "4.5.0",
+  "firmware_version": "4.2.0",
+  "esp32_core_version": "3.3.11",
+  "baud": 921600,
   "board": "starcore-v2",
   "esptool_version": "5.3.1",
-  "firmware_version": "4.0.0",
-  "baud": 921600,
   "images": [
     {
       "sha256": "6f388700221f4f5be03bb7b902808504557431612e3a07e4af11ea19c7f5f27e",
@@ -23,7 +23,7 @@
       "offset": "0xe000"
     },
     {
-      "sha256": "1d5e346b715422fec100adc2385aaab70f85e1db4316b9fe0c8a24906a6ab68a",
+      "sha256": "4fa09112622117e8b4876e5911e498ae0cc3b7b075ccec5bcb3f3fe47d6f585b",
       "file": "firmware.bin",
       "offset": "0x10000"
     }

@@ -9,6 +9,7 @@ MAX_PAYLOAD = 256
 
 class BoardType(StrEnum):
     STARCORE_V2 = "starcore-v2"
+    STARDUST = "stardust"
     ARDUINO_UNO = "arduino-uno"
 
 
@@ -55,6 +56,29 @@ class Command(IntEnum):
     MP3_SET_VOLUME = 0x77
     MP3_STATUS = 0x78
     MP3_BUSY = 0x79
+    PN532_INIT = 0x80
+    PN532_FIRMWARE_VERSION = 0x81
+    PN532_SCAN = 0x82
+    PN532_CLASSIC_READ = 0x83
+    PN532_CLASSIC_WRITE = 0x84
+    PN532_PAGE_READ = 0x85
+    PN532_PAGE_WRITE = 0x86
+    SOFTWARE_SERIAL_INIT = 0x90
+    SOFTWARE_SERIAL_WRITE = 0x91
+    SOFTWARE_SERIAL_READ = 0x92
+    SOFTWARE_SERIAL_AVAILABLE = 0x93
+    SOFTWARE_SERIAL_END = 0x94
+    WIFI_CONNECT = 0xA0
+    WIFI_DISCONNECT = 0xA1
+    WIFI_STATUS = 0xA2
+    ESPNOW_INIT = 0xB0
+    ESPNOW_ADD_PEER = 0xB1
+    ESPNOW_REMOVE_PEER = 0xB2
+    ESPNOW_SEND = 0xB3
+    ESPNOW_RECEIVE = 0xB4
+    ESPNOW_LOCAL_MAC = 0xB5
+    TIME_SYNC = 0xC0
+    TIME_NOW = 0xC1
 
 
 class Status(IntEnum):
@@ -115,3 +139,18 @@ class Pin(IntEnum):
     ONBOARD_PIXELS = 17
     I2C_SCL = 22
     I2C_SDA = 23
+
+
+class StardustPin(IntEnum):
+    """星尘板对外引脚。D0/D1 专用于 CH340 协议串口。"""
+
+    D2 = 2
+    D3 = 3
+    D5 = 5
+    D6 = 6
+    D9 = 9
+    D10 = 10
+    A0 = 14
+    A1 = 15
+    A2 = 16
+    A3 = 17

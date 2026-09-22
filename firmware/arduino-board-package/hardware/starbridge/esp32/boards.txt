@@ -1,0 +1,52 @@
+# StarBridge Arduino board definitions.
+# This lightweight platform reuses the installed Espressif ESP32 core.
+
+menu.UploadSpeed=Upload Speed
+menu.PartitionScheme=Partition Scheme
+
+starcore_v2.name=StarCore V2 (星核板 V2)
+
+starcore_v2.bootloader.tool=esp32:esptool_py
+starcore_v2.bootloader.tool.default=esp32:esptool_py
+starcore_v2.upload.tool=esp32:esptool_py
+starcore_v2.upload.tool.default=esp32:esptool_py
+starcore_v2.upload.tool.network=esp32:esp_ota
+starcore_v2.upload.speed=921600
+starcore_v2.upload.maximum_size=3342336
+starcore_v2.upload.maximum_data_size=327680
+starcore_v2.upload.flags=
+starcore_v2.upload.erase_cmd=
+starcore_v2.upload.extra_flags=
+
+starcore_v2.serial.disableDTR=true
+starcore_v2.serial.disableRTS=true
+
+starcore_v2.build.tarch=xtensa
+starcore_v2.build.bootloader_addr=0x1000
+starcore_v2.build.target=esp32
+starcore_v2.build.mcu=esp32
+starcore_v2.build.core=esp32:esp32
+starcore_v2.build.variant=starcore_v2
+starcore_v2.build.board=STARBRIDGE_STARCORE_V2
+starcore_v2.build.f_cpu=240000000L
+starcore_v2.build.flash_size=8MB
+starcore_v2.build.flash_freq=40m
+starcore_v2.build.flash_mode=dio
+starcore_v2.build.boot=dio
+starcore_v2.build.partitions=default_8MB
+starcore_v2.build.defines=-DSTARBRIDGE_BOARD_STARCORE_V2=1
+starcore_v2.build.loop_core=
+starcore_v2.build.event_core=
+starcore_v2.build.copy_jtag_files=0
+
+starcore_v2.menu.UploadSpeed.921600=921600
+starcore_v2.menu.UploadSpeed.921600.upload.speed=921600
+starcore_v2.menu.UploadSpeed.115200=115200
+starcore_v2.menu.UploadSpeed.115200.upload.speed=115200
+
+starcore_v2.menu.PartitionScheme.default_8MB=8MB with SPIFFS (3MB APP/1.5MB SPIFFS)
+starcore_v2.menu.PartitionScheme.default_8MB.build.partitions=default_8MB
+starcore_v2.menu.PartitionScheme.default_8MB.upload.maximum_size=3342336
+starcore_v2.menu.PartitionScheme.huge_app=Huge APP (3MB No OTA/1MB SPIFFS)
+starcore_v2.menu.PartitionScheme.huge_app.build.partitions=huge_app
+starcore_v2.menu.PartitionScheme.huge_app.upload.maximum_size=3145728

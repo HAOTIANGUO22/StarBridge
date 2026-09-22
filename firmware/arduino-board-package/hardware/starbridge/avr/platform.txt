@@ -1,0 +1,6 @@
+name=StarBridge AVR Boards
+version=4.0.0
+
+# Compiler recipes, tools, bootloaders, the Arduino core and bundled libraries
+# come from the pinned official arduino:avr platform.
+runtime.use_core_platform_path_for_runtime_platform_path=true

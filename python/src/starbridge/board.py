@@ -13,8 +13,13 @@ from .programmer import FirmwareProgrammer, discover_port
 from .transport import SerialTransport, Transport
 from .oled import OLED
 from .mp3 import MP3
+from .pn532 import PN532
 from .neopixel import NeoPixel
 from .sensors import DHT11, Ultrasonic
+from .software_serial import SoftwareSerial
+from .wifi import WiFi
+from .espnow import ESPNow
+from .network_time import NetworkTime
 
 
 @dataclass(frozen=True, slots=True)
@@ -97,8 +102,13 @@ class Board:
             try:
                 candidate = cls.connect(port, profile.baudrate, timeout)
                 info = candidate.info()
+                firmware_version = (
+                    info.firmware_major,
+                    info.firmware_minor,
+                    info.firmware_patch,
+                )
                 if (info.board_id == profile.board_id and
-                        info.firmware_major >= profile.minimum_firmware_major):
+                        firmware_version >= profile.minimum_firmware_version):
                     return candidate
             except (OSError, StarBridgeError):
                 pass
@@ -185,6 +195,36 @@ class Board:
     def mp3(self, rx_pin: Pin | int, tx_pin: Pin | int,
             busy_pin: Pin | int | None = None) -> MP3:
         return MP3(self._client, rx_pin, tx_pin, busy_pin)
+
+    def pn532(
+        self,
+        *,
+        irq_pin: Pin | int | None = None,
+        reset_pin: Pin | int | None = None,
+    ) -> PN532:
+        return PN532(self._client, irq_pin, reset_pin)
+
+    def nfc(
+        self,
+        *,
+        irq_pin: Pin | int | None = None,
+        reset_pin: Pin | int | None = None,
+    ) -> PN532:
+        """Alias for :meth:`pn532`."""
+        return self.pn532(irq_pin=irq_pin, reset_pin=reset_pin)
+
+    def software_serial(self, rx_pin: Pin | int, tx_pin: Pin | int,
+                        baudrate: int = 9600) -> SoftwareSerial:
+        return SoftwareSerial(self._client, rx_pin, tx_pin, baudrate)
+
+    def wifi(self) -> WiFi:
+        return WiFi(self._client)
+
+    def espnow(self, channel: int = 0) -> ESPNow:
+        return ESPNow(self._client, channel)
+
+    def network_time(self) -> NetworkTime:
+        return NetworkTime(self._client)
 
     def close(self) -> None:
         self._client.close()

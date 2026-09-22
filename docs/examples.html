@@ -3,300 +3,120 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>StarBridge 4.4 元器件示例手册</title>
+  <title>StarBridge 开发板用法与示例程序</title>
   <style>
-    :root {
-      color-scheme: light;
-      --bg: #f5f5f7;
-      --panel: rgba(255, 255, 255, 0.82);
-      --panel-solid: #ffffff;
-      --panel-2: #f5f5f7;
-      --text: #1d1d1f;
-      --muted: #6e6e73;
-      --blue: #0071e3;
-      --blue-hover: #0077ed;
-      --cyan: #00a6a6;
-      --orange: #bf5b00;
-      --line: rgba(0, 0, 0, 0.08);
-      --code: #1d1d1f;
-      --shadow: 0 18px 50px rgba(0, 0, 0, 0.08);
-    }
+    :root { color-scheme: light; --bg:#f5f5f7; --panel:rgba(255,255,255,.84); --soft:#f1f1f3; --text:#1d1d1f; --muted:#6e6e73; --blue:#0071e3; --purple:#8944ab; --orange:#b45309; --line:rgba(0,0,0,.09); --code:#1d1d1f; --shadow:0 18px 50px rgba(0,0,0,.08); }
     * { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
-    body {
-      margin: 0;
-      color: var(--text);
-      background:
-        radial-gradient(circle at 12% 4%, rgba(0, 113, 227, 0.10) 0, transparent 28rem),
-        radial-gradient(circle at 88% 8%, rgba(175, 82, 222, 0.08) 0, transparent 26rem),
-        var(--bg);
-      font: 16px/1.62 -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Segoe UI", "Microsoft YaHei", sans-serif;
-      -webkit-font-smoothing: antialiased;
-      text-rendering: optimizeLegibility;
-    }
-    a { color: var(--blue); }
-    header {
-      position: relative;
-      overflow: hidden;
-      padding: 92px 24px 72px;
-      text-align: center;
-      border-bottom: 1px solid var(--line);
-      background: rgba(255, 255, 255, 0.56);
-      backdrop-filter: saturate(180%) blur(24px);
-      -webkit-backdrop-filter: saturate(180%) blur(24px);
-    }
-    .brand {
-      margin: 0;
-      font-size: clamp(48px, 8vw, 82px);
-      font-weight: 700;
-      line-height: 1.04;
-      letter-spacing: -0.055em;
-      background: linear-gradient(110deg, #1d1d1f 10%, #0071e3 55%, #af52de 100%);
-      -webkit-background-clip: text;
-      color: transparent;
-    }
-    .tagline {
-      margin: 22px auto 0;
-      max-width: 720px;
-      color: var(--muted);
-      font-size: clamp(18px, 2.6vw, 22px);
-      line-height: 1.45;
-      letter-spacing: -0.015em;
-    }
-    .version {
-      display: inline-block;
-      margin-top: 28px;
-      padding: 8px 14px;
-      color: var(--blue);
-      border: 1px solid rgba(0, 113, 227, 0.16);
-      border-radius: 999px;
-      background: rgba(0, 113, 227, 0.08);
-      font-size: 14px;
-      font-weight: 600;
-      letter-spacing: 0.01em;
-    }
-    .layout {
-      display: grid;
-      grid-template-columns: 248px minmax(0, 900px);
-      gap: 32px;
-      max-width: 1228px;
-      margin: 0 auto;
-      padding: 48px 24px 96px;
-    }
-    nav {
-      position: sticky;
-      top: 20px;
-      align-self: start;
-      padding: 16px;
-      border: 1px solid var(--line);
-      border-radius: 22px;
-      background: rgba(255, 255, 255, 0.76);
-      box-shadow: 0 12px 34px rgba(0, 0, 0, 0.06);
-      backdrop-filter: saturate(180%) blur(22px);
-      -webkit-backdrop-filter: saturate(180%) blur(22px);
-    }
-    nav strong {
-      display: block;
-      margin: 2px 10px 12px;
-      color: var(--text);
-      font-size: 13px;
-      letter-spacing: 0.04em;
-    }
-    nav a {
-      display: block;
-      padding: 8px 10px;
-      color: var(--muted);
-      text-decoration: none;
-      border-radius: 10px;
-      font-size: 14px;
-      transition: color 160ms ease, background 160ms ease, transform 160ms ease;
-    }
-    nav a:hover {
-      color: var(--blue-hover);
-      background: rgba(0, 113, 227, 0.08);
-      transform: translateX(2px);
-    }
-    main { min-width: 0; }
-    section {
-      scroll-margin-top: 20px;
-      margin-bottom: 24px;
-      padding: clamp(24px, 4vw, 36px);
-      border: 1px solid var(--line);
-      border-radius: 28px;
-      background: var(--panel);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-    }
-    h2 {
-      margin: 0 0 12px;
-      font-size: clamp(27px, 4vw, 34px);
-      line-height: 1.2;
-      letter-spacing: -0.035em;
-    }
-    h3 { margin-top: 30px; color: var(--text); font-size: 19px; letter-spacing: -0.015em; }
-    p { margin: 8px 0 16px; }
-    .meta { color: var(--muted); }
-    .wiring {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
-      gap: 12px;
-      margin: 20px 0;
-    }
-    .wire {
-      padding: 14px 16px;
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      background: var(--panel-2);
-    }
-    .wire b { display: block; color: var(--blue); font-size: 14px; }
-    .note, .warning {
-      margin: 18px 0;
-      padding: 15px 17px;
-      border: 1px solid rgba(0, 113, 227, 0.10);
-      border-radius: 14px;
-      background: rgba(0, 113, 227, 0.07);
-    }
-    .warning { border-color: rgba(191, 91, 0, 0.14); background: rgba(255, 149, 0, 0.10); }
-    pre {
-      position: relative;
-      overflow: auto;
-      margin: 18px 0 0;
-      padding: 22px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 18px;
-      background: var(--code);
-      color: #f5f5f7;
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07);
-      tab-size: 4;
-    }
-    code { font: 14px/1.65 "SFMono-Regular", Consolas, "Cascadia Code", monospace; }
-    :not(pre) > code {
-      padding: 0.16em 0.38em;
-      color: #9a3412;
-      border-radius: 6px;
-      background: #f1f1f3;
-      font-size: 0.88em;
-    }
-    .copy {
-      position: absolute;
-      top: 12px;
-      right: 12px;
-      padding: 6px 11px;
-      color: #f5f5f7;
-      border: 1px solid rgba(255, 255, 255, 0.16);
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.10);
-      cursor: pointer;
-      font-size: 12px;
-      transition: background 160ms ease, transform 160ms ease;
-    }
-    .copy:hover { background: rgba(255, 255, 255, 0.18); transform: translateY(-1px); }
-    footer { padding: 32px; color: var(--muted); text-align: center; font-size: 13px; }
-    @media (max-width: 820px) {
-      header { padding: 64px 20px 52px; }
-      .layout { grid-template-columns: 1fr; padding: 24px 16px 72px; }
-      nav { position: static; columns: 2; border-radius: 20px; }
-      nav strong { column-span: all; }
-      section { border-radius: 22px; }
-    }
-    @media (max-width: 520px) {
-      nav { columns: 1; }
-      pre { margin-inline: -8px; padding: 20px 16px; border-radius: 14px; }
-      .copy { position: sticky; float: right; margin: -8px -4px 6px 10px; }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      html { scroll-behavior: auto; }
-      nav a, .copy { transition: none; }
-    }
+    body { margin:0; color:var(--text); background:radial-gradient(circle at 10% 2%,rgba(0,113,227,.11),transparent 30rem),radial-gradient(circle at 90% 4%,rgba(137,68,171,.10),transparent 28rem),var(--bg); font:16px/1.65 -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI","Microsoft YaHei",sans-serif; -webkit-font-smoothing:antialiased; }
+    a { color:var(--blue); }
+    header { padding:72px 24px 42px; text-align:center; border-bottom:1px solid var(--line); background:rgba(255,255,255,.58); backdrop-filter:saturate(180%) blur(24px); }
+    .brand { margin:0; font-size:clamp(43px,8vw,76px); font-weight:750; line-height:1.04; letter-spacing:-.055em; background:linear-gradient(110deg,#1d1d1f 10%,#0071e3 54%,#8944ab 100%); -webkit-background-clip:text; color:transparent; }
+    .tagline { max-width:760px; margin:20px auto 0; color:var(--muted); font-size:clamp(17px,2.5vw,21px); }
+    .board-switcher { display:inline-flex; gap:6px; margin-top:30px; padding:6px; border:1px solid var(--line); border-radius:17px; background:rgba(238,238,240,.88); }
+    .board-tab { min-width:150px; padding:11px 18px; color:var(--muted); border:0; border-radius:12px; background:transparent; cursor:pointer; font:inherit; font-weight:650; transition:background 160ms,color 160ms,box-shadow 160ms; }
+    .board-tab.active { color:var(--text); background:#fff; box-shadow:0 4px 14px rgba(0,0,0,.10); }
+    .manual-page { display:none; }
+    .manual-page.active { display:block; }
+    .layout { display:grid; grid-template-columns:250px minmax(0,920px); gap:32px; max-width:1250px; margin:0 auto; padding:48px 24px 96px; }
+    nav { position:sticky; top:20px; align-self:start; padding:16px; border:1px solid var(--line); border-radius:22px; background:rgba(255,255,255,.80); box-shadow:0 12px 34px rgba(0,0,0,.06); backdrop-filter:saturate(180%) blur(22px); }
+    nav strong { display:block; margin:2px 10px 12px; font-size:13px; letter-spacing:.04em; }
+    nav a { display:block; padding:8px 10px; color:var(--muted); text-decoration:none; border-radius:10px; font-size:14px; transition:color 160ms,background 160ms,transform 160ms; }
+    nav a:hover { color:var(--blue); background:rgba(0,113,227,.08); transform:translateX(2px); }
+    main { min-width:0; }
+    section { scroll-margin-top:20px; margin-bottom:24px; padding:clamp(24px,4vw,36px); border:1px solid var(--line); border-radius:28px; background:var(--panel); box-shadow:var(--shadow); backdrop-filter:blur(20px); }
+    .board-intro { border-top:4px solid var(--blue); }
+    #stardust-page .board-intro { border-top-color:var(--purple); }
+    h2 { margin:0 0 12px; font-size:clamp(27px,4vw,35px); line-height:1.2; letter-spacing:-.035em; }
+    h3 { margin:28px 0 8px; font-size:19px; letter-spacing:-.015em; }
+    p { margin:8px 0 16px; }
+    .meta { color:var(--muted); }
+    .chips { display:flex; flex-wrap:wrap; gap:8px; margin:20px 0 6px; }
+    .chip { padding:6px 11px; color:var(--blue); border:1px solid rgba(0,113,227,.14); border-radius:999px; background:rgba(0,113,227,.07); font-size:13px; font-weight:600; }
+    #stardust-page .chip { color:var(--purple); border-color:rgba(137,68,171,.15); background:rgba(137,68,171,.07); }
+    .wiring,.pin-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; margin:20px 0; }
+    .wire,.pin-card { padding:14px 16px; border:1px solid var(--line); border-radius:16px; background:var(--soft); }
+    .wire b,.pin-card b { display:block; color:var(--blue); font-size:14px; }
+    #stardust-page .wire b,#stardust-page .pin-card b { color:var(--purple); }
+    .note,.warning { margin:18px 0; padding:15px 17px; border:1px solid rgba(0,113,227,.12); border-radius:14px; background:rgba(0,113,227,.07); }
+    .warning { border-color:rgba(180,83,9,.16); background:rgba(245,158,11,.11); }
+    pre { position:relative; overflow:auto; margin:18px 0 0; padding:22px; border:1px solid rgba(255,255,255,.08); border-radius:18px; background:var(--code); color:#f5f5f7; tab-size:4; }
+    code { font:14px/1.65 "SFMono-Regular",Consolas,"Cascadia Code",monospace; }
+    :not(pre)>code { padding:.16em .38em; color:#9a3412; border-radius:6px; background:var(--soft); font-size:.88em; }
+    .copy { position:absolute; top:12px; right:12px; padding:6px 11px; color:#f5f5f7; border:1px solid rgba(255,255,255,.16); border-radius:999px; background:rgba(255,255,255,.10); cursor:pointer; font-size:12px; }
+    footer { padding:30px; color:var(--muted); text-align:center; font-size:13px; }
+    @media (max-width:820px) { header{padding:54px 18px 34px}.layout{grid-template-columns:1fr;padding:24px 16px 72px}nav{position:static;columns:2}nav strong{column-span:all}section{border-radius:22px} }
+    @media (max-width:520px) { .board-switcher{display:flex;width:100%}.board-tab{min-width:0;flex:1;padding-inline:10px}nav{columns:1}pre{margin-inline:-8px;padding:20px 16px;border-radius:14px}.copy{position:sticky;float:right;margin:-8px -4px 6px 10px} }
+    @media (prefers-reduced-motion:reduce) { html{scroll-behavior:auto}nav a,.board-tab{transition:none} }
   </style>
 </head>
 <body>
   <header>
     <h1 class="brand">StarBridge</h1>
-    <p class="tagline">星核板 V2 · Python 元器件示例手册。所有示例均使用公开 SDK API，可直接复制到 PyCharm 运行。</p>
-    <span class="version">SDK 4.4.0 · Protocol V2 · Firmware 4.0.0</span>
+    <p class="tagline">开发板用法与 Python 示例程序</p>
+    <div class="board-switcher" role="tablist" aria-label="选择开发板">
+      <button class="board-tab active" type="button" role="tab" aria-selected="true" aria-controls="starcore-page" data-page="starcore-page">星核板 V2</button>
+      <button class="board-tab" type="button" role="tab" aria-selected="false" aria-controls="stardust-page" data-page="stardust-page">星尘板</button>
+    </div>
   </header>
 
-  <div class="layout">
-    <nav aria-label="示例目录">
-      <strong>示例目录</strong>
-      <a href="#install">安装与连接</a>
-      <a href="#gpio">数字输入输出</a>
-      <a href="#analog">模拟量 / ADC</a>
-      <a href="#dac">模拟输出 / DAC</a>
-      <a href="#pwm">PWM 与蜂鸣器</a>
-      <a href="#oled">OLED 显示屏</a>
-      <a href="#dht11">DHT11 温湿度</a>
-      <a href="#pixels">WS2812 灯带</a>
-      <a href="#ultrasonic">超声波测距</a>
-      <a href="#mp3">DFR0534 MP3</a>
-      <a href="#dashboard">综合环境仪表</a>
-      <a href="#errors">异常处理</a>
-    </nav>
-
-    <main>
-      <section id="install">
-        <h2>安装与连接</h2>
-        <p class="meta">Windows wheel 内置固件、esptool 和串口运行库，不需要 Arduino IDE 或 Arduino CLI。</p>
-        <pre><code>python -m pip install https://github.com/HAOTIANGUO22/StarBridge/releases/download/v4.4.0/starbridge-4.4.0-py3-none-any.whl</code></pre>
-        <h3>自动识别开发板</h3>
-        <pre><code>from starbridge import Board, BoardType
+  <div id="starcore-page" class="manual-page active" role="tabpanel">
+    <div class="layout">
+      <nav aria-label="星核板 V2 目录">
+        <strong>星核板 V2</strong>
+        <a href="#sc-start">开始使用</a><a href="#sc-pins">引脚说明</a><a href="#sc-gpio">数字输入输出</a><a href="#sc-analog">ADC 与 DAC</a><a href="#sc-pwm">PWM 与蜂鸣器</a><a href="#sc-oled">OLED 显示屏</a><a href="#sc-dht11">DHT11 温湿度</a><a href="#sc-pixels">WS2812 灯珠</a><a href="#sc-ultrasonic">超声波测距</a><a href="#sc-mp3">串口 MP3</a><a href="#sc-pn532">PN532 NFC</a><a href="#sc-softserial">通用软串口</a><a href="#sc-network">Wi-Fi 与 ESP-NOW</a><a href="#sc-cloud">网络服务</a>
+      </nav>
+      <main>
+        <section id="sc-start" class="board-intro">
+          <h2>星核板 V2</h2>
+          <p class="meta">ESP32 开发板，使用 <code>BoardType.STARCORE_V2</code> 和 <code>Pin</code> 引脚枚举。</p>
+          <div class="chips"><span class="chip">3.3V 逻辑</span><span class="chip">Wi-Fi</span><span class="chip">ESP-NOW</span><span class="chip">ADC / DAC</span><span class="chip">I²C</span></div>
+          <h3>安装与连接</h3>
+          <pre><code>python -m pip install --upgrade starbridge-hardware</code></pre>
+          <pre><code>from starbridge import Board, BoardType
 
 with Board.begin(BoardType.STARCORE_V2) as board:
-    print(board.info())</code></pre>
-        <div class="note">4.4.0 同时识别 CP210x 与 CH9102。存在多个相同设备时，可传入 <code>port="COM4"</code>。</div>
-      </section>
-
-      <section id="gpio">
-        <h2>数字输入输出</h2>
-        <p>用 P0 输出高低电平，并读取板载 A 按钮。</p>
-        <pre><code>import time
+    info = board.info()
+    print("固件版本：", f"{info.firmware_major}.{info.firmware_minor}.{info.firmware_patch}")
+    print("功能位：", hex(info.capabilities))</code></pre>
+          <div class="note">只有一块匹配设备时会自动选择串口；连接多块开发板时可写成 <code>Board.begin(BoardType.STARCORE_V2, port="COM4")</code>。</div>
+        </section>
+        <section id="sc-pins">
+          <h2>引脚说明</h2>
+          <div class="pin-grid"><div class="pin-card"><b>普通接口</b>P0～P20，按板上丝印选择</div><div class="pin-card"><b>仅输入</b>P2、P3、P4、P10</div><div class="pin-card"><b>DAC</b>P8 / GPIO26，P9 / GPIO25</div><div class="pin-card"><b>I²C</b>SDA=P20，SCL=P19</div><div class="pin-card"><b>板载灯珠</b>Pin.ONBOARD_PIXELS</div><div class="pin-card"><b>板载蜂鸣器</b>Pin.BUZZER</div></div>
+          <div class="warning">星核板是 3.3V 逻辑。5V 输出信号接入 ESP32 前必须使用分压或电平转换。</div>
+        </section>
+        <section id="sc-gpio">
+          <h2>数字输入输出</h2><p>P0 控制 LED，板载按键 A 作为上拉输入。按键按下时读取为低电平。</p>
+          <pre><code>import time
 from starbridge import Board, BoardType, Pin, PinMode
 
 with Board.begin(BoardType.STARCORE_V2) as board:
     board.pin_mode(Pin.P0, PinMode.OUTPUT)
     board.pin_mode(Pin.BUTTON_A, PinMode.INPUT_PULLUP)
-
     while True:
         pressed = not board.digital_read(Pin.BUTTON_A)
         board.digital_write(Pin.P0, pressed)
         print("按下" if pressed else "松开")
         time.sleep(0.05)</code></pre>
-      </section>
-
-      <section id="analog">
-        <h2>模拟量 / ADC</h2>
-        <p>P0 支持原始 ADC 数值和毫伏值读取。板载光线传感器可使用 <code>Pin.LIGHT</code>。</p>
-        <pre><code>import time
+        </section>
+        <section id="sc-analog">
+          <h2>ADC 与 DAC</h2><p><code>analog_read()</code> 可返回 ADC 原始值或毫伏值；P8、P9 支持 0～255 的 8 位 DAC 输出。</p>
+          <pre><code>import time
 from starbridge import Board, BoardType, Pin
 
 with Board.begin(BoardType.STARCORE_V2) as board:
-    while True:
-        raw = board.analog_read(Pin.P0)
-        millivolts = board.analog_read(Pin.P0, millivolts=True)
-        light = board.analog_read(Pin.LIGHT)
-        print(f"P0={raw}, {millivolts} mV, 光线={light}")
-        time.sleep(0.2)</code></pre>
-      </section>
-
-      <section id="dac">
-        <h2>模拟输出 / DAC</h2>
-        <p>P8/GPIO26 和 P9/GPIO25 支持 8 位 DAC，取值范围为 0–255。</p>
-        <pre><code>import time
-from starbridge import Board, BoardType, Pin
-
-with Board.begin(BoardType.STARCORE_V2) as board:
+    print("P0 原始值：", board.analog_read(Pin.P0))
+    print("P0 电压：", board.analog_read(Pin.P0, millivolts=True), "mV")
+    print("板载光线：", board.analog_read(Pin.LIGHT))
     for value in range(0, 256, 8):
         board.analog_write(Pin.P8, value)
         time.sleep(0.03)
     board.analog_write(Pin.P8, 0)</code></pre>
-      </section>
-
-      <section id="pwm">
-        <h2>PWM 与板载蜂鸣器</h2>
-        <p>以下示例在板载蜂鸣器上输出 1 kHz 方波。占空比 128 对应 8 位分辨率下约 50%。</p>
-        <pre><code>import time
+        </section>
+        <section id="sc-pwm">
+          <h2>PWM 与蜂鸣器</h2><p>先设置频率和分辨率，再写入占空比。8 位分辨率下的 128 约等于 50%。</p>
+          <pre><code>import time
 from starbridge import Board, BoardType, Pin
 
 with Board.begin(BoardType.STARCORE_V2) as board:
@@ -304,37 +124,27 @@ with Board.begin(BoardType.STARCORE_V2) as board:
     board.pwm_write(Pin.BUZZER, 128)
     time.sleep(1)
     board.pwm_stop(Pin.BUZZER)</code></pre>
-      </section>
-
-      <section id="oled">
-        <h2>SSD1306 OLED</h2>
-        <div class="wiring">
-          <div class="wire"><b>SDA</b>P20 / GPIO23</div>
-          <div class="wire"><b>SCL</b>P19 / GPIO22</div>
-          <div class="wire"><b>地址</b>0x3C</div>
-        </div>
-        <pre><code>from starbridge import Board, BoardType
+        </section>
+        <section id="sc-oled">
+          <h2>SSD1306 OLED 显示屏</h2>
+          <div class="wiring"><div class="wire"><b>SDA</b>P20 / GPIO23</div><div class="wire"><b>SCL</b>P19 / GPIO22</div><div class="wire"><b>地址</b>通常为 0x3C</div><div class="wire"><b>供电</b>按模块标识连接</div></div>
+          <pre><code>from starbridge import Board, BoardType
 
 with Board.begin(BoardType.STARCORE_V2) as board:
-    oled = board.oled().begin()
+    oled = board.oled().begin(0x3C)
     oled.clear()
-    oled.text(0, 14, "你好，StarBridge")
+    oled.text(0, 14, "你好，星核板")
     oled.rect(0, 20, 128, 30)
     oled.line(0, 63, 127, 0)
     oled.pixel(64, 32)
     oled.show()
     input("按回车退出")</code></pre>
-      </section>
-
-      <section id="dht11">
-        <h2>DHT11 温湿度</h2>
-        <div class="wiring">
-          <div class="wire"><b>DATA</b>P1</div>
-          <div class="wire"><b>VCC</b>3.3V</div>
-          <div class="wire"><b>GND</b>GND</div>
-        </div>
-        <div class="warning">DHT11 需要双向引脚。不要使用仅输入的 P2、P3、P4、P10。裸传感器通常还需要 4.7kΩ–10kΩ 上拉电阻。</div>
-        <pre><code>import time
+        </section>
+        <section id="sc-dht11">
+          <h2>DHT11 温湿度</h2>
+          <div class="wiring"><div class="wire"><b>DATA</b>P1</div><div class="wire"><b>VCC</b>3.3V</div><div class="wire"><b>GND</b>GND</div></div>
+          <div class="warning">DATA 必须连接可双向工作的引脚。裸传感器通常需要在 DATA 与 VCC 之间接 4.7kΩ～10kΩ 上拉电阻。</div>
+          <pre><code>import time
 from starbridge import Board, BoardType, Pin
 
 with Board.begin(BoardType.STARCORE_V2) as board:
@@ -344,35 +154,25 @@ with Board.begin(BoardType.STARCORE_V2) as board:
         print(f"温度 {data.temperature_c:.1f} °C")
         print(f"湿度 {data.humidity_percent:.1f} %")
         time.sleep(2)</code></pre>
-      </section>
-
-      <section id="pixels">
-        <h2>WS2812 / NeoPixel</h2>
-        <p>板载共有 3 颗 WS2812B，数据脚可用 <code>Pin.ONBOARD_PIXELS</code>。</p>
-        <pre><code>import time
+        </section>
+        <section id="sc-pixels">
+          <h2>WS2812 / NeoPixel</h2><p>板载三颗灯珠使用 <code>Pin.ONBOARD_PIXELS</code>，每颗灯珠分别设置 RGB 后调用 <code>show()</code>。</p>
+          <pre><code>import time
 from starbridge import Board, BoardType, Pin
 
 with Board.begin(BoardType.STARCORE_V2) as board:
     pixels = board.neopixel(Pin.ONBOARD_PIXELS, 3, brightness=64)
-    colors = [(255, 0, 0), (0, 255, 0), (0, 0, 255)]
-
-    for index, color in enumerate(colors):
+    for index, color in enumerate([(255, 0, 0), (0, 255, 0), (0, 0, 255)]):
         pixels.set_pixel(index, *color)
     pixels.show()
     time.sleep(2)
     pixels.clear()</code></pre>
-      </section>
-
-      <section id="ultrasonic">
-        <h2>超声波测距</h2>
-        <div class="wiring">
-          <div class="wire"><b>TRIG</b>P6</div>
-          <div class="wire"><b>ECHO</b>P7，经分压</div>
-          <div class="wire"><b>VCC</b>按模块要求</div>
-          <div class="wire"><b>GND</b>共地</div>
-        </div>
-        <div class="warning">HC-SR04 的 ECHO 通常为 5V，接入 ESP32 前必须分压至约 3.3V。物体紧贴探头会进入盲区，应捕获无回波异常。</div>
-        <pre><code>import time
+        </section>
+        <section id="sc-ultrasonic">
+          <h2>超声波测距</h2>
+          <div class="wiring"><div class="wire"><b>TRIG</b>P6</div><div class="wire"><b>ECHO</b>P7，经分压</div><div class="wire"><b>GND</b>与开发板共地</div></div>
+          <div class="warning">HC-SR04 的 ECHO 通常输出 5V，必须分压到约 3.3V 后再接入星核板。</div>
+          <pre><code>import time
 from starbridge import Board, BoardType, Pin
 from starbridge.errors import BoardCommandError
 
@@ -381,20 +181,14 @@ with Board.begin(BoardType.STARCORE_V2) as board:
     while True:
         try:
             print(f"距离 {sonar.read_cm():.1f} cm")
-        except BoardCommandError as error:
-            print(error)  # 过近、超出量程或没有回波时继续运行
+        except BoardCommandError:
+            print("没有收到回波")
         time.sleep(0.5)</code></pre>
-      </section>
-
-      <section id="mp3">
-        <h2>DFR0534 MP3 模块</h2>
-        <div class="wiring">
-          <div class="wire"><b>模块 T</b>开发板 RX / P13</div>
-          <div class="wire"><b>模块 R</b>开发板 TX / P14</div>
-          <div class="wire"><b>BUSY</b>P15，可省略</div>
-          <div class="wire"><b>波特率</b>9600</div>
-        </div>
-        <pre><code>import time
+        </section>
+        <section id="sc-mp3">
+          <h2>DFR0534 串口 MP3</h2>
+          <div class="wiring"><div class="wire"><b>模块 TX</b>开发板 RX / P13</div><div class="wire"><b>模块 RX</b>开发板 TX / P14</div><div class="wire"><b>BUSY</b>P15，可省略</div><div class="wire"><b>波特率</b>9600</div></div>
+          <pre><code>import time
 from starbridge import Board, BoardType, Pin
 
 with Board.begin(BoardType.STARCORE_V2) as board:
@@ -403,66 +197,279 @@ with Board.begin(BoardType.STARCORE_V2) as board:
     mp3.play_track(1)
     time.sleep(5)
     mp3.pause()
-    time.sleep(1)
-    mp3.play()
-    print("模块状态:", mp3.status())
-    print("正在播放:", mp3.is_busy())</code></pre>
-      </section>
-
-      <section id="dashboard">
-        <h2>综合示例：环境仪表</h2>
-        <p>DHT11、超声波和 OLED 同时工作；无回波时屏幕继续刷新，不会退出程序。</p>
-        <pre><code>import time
-from starbridge import Board, BoardType, Pin
-from starbridge.errors import BoardCommandError
+    print("播放状态：", mp3.status())</code></pre>
+        </section>
+        <section id="sc-pn532">
+          <h2>PN532 NFC（I²C）</h2>
+          <div class="wiring"><div class="wire"><b>SDA</b>P20 / GPIO23</div><div class="wire"><b>SCL</b>P19 / GPIO22</div><div class="wire"><b>地址</b>0x24</div><div class="wire"><b>模式</b>I²C</div></div>
+          <div class="warning">先把模块拨码或焊盘切换到 I²C 模式。写卡时不要移动标签，SDK 会保护扇区尾块、锁定位和配置页。</div>
+          <pre><code>from starbridge import Board, BoardType, Pin
 
 with Board.begin(BoardType.STARCORE_V2) as board:
-    climate = board.dht11(Pin.P1)
-    sonar = board.ultrasonic(Pin.P6, Pin.P7)
-    oled = board.oled().begin()
+    nfc = board.pn532(reset_pin=Pin.P0).begin()
+    print("固件：", nfc.firmware_info())
+    uid = nfc.scan(timeout=0.25)
+    if uid is not None:
+        print("UID：", uid.hex("-").upper())
+        print("第 4 页：", nfc.read_page(4))
+        nfc.write_page(4, b"NFC!")</code></pre>
+        </section>
+        <section id="sc-softserial">
+          <h2>通用软串口</h2><p>第一个引脚是 RX，第二个引脚是 TX。适合连接使用 UART 的传感器、执行器和 AT 指令模块。</p>
+          <pre><code>from starbridge import Board, BoardType, Pin
 
+with Board.begin(BoardType.STARCORE_V2) as board:
+    uart = board.software_serial(Pin.P6, Pin.P7, 9600)
+    uart.write(b"AT\r\n")
+    print(uart.read(timeout=1.0))
+    uart.close()</code></pre>
+        </section>
+        <section id="sc-network">
+          <h2>Wi-Fi、ESP-NOW 与网络时间</h2><div class="warning">ESP32 使用 2.4 GHz Wi-Fi。Wi-Fi 已连接时，ESP-NOW 应使用接入点所在的同一信道。</div>
+          <pre><code>from starbridge import Board, BoardType
+
+with Board.begin(BoardType.STARCORE_V2) as board:
+    wifi = board.wifi()
+    print(wifi.connect("你的 Wi-Fi", "密码"))
+    print(board.network_time().synchronize(utc_offset=8 * 3600))
+    radio = board.espnow()
+    radio.add_peer("AA:BB:CC:DD:EE:FF")
+    radio.send("AA:BB:CC:DD:EE:FF", b"hello")
+    print(radio.receive())</code></pre>
+        </section>
+        <section id="sc-cloud">
+          <h2>天气、语音识别与大模型</h2><p>这些 HTTPS 请求由电脑端 SDK 执行。OpenAI 密钥默认从 <code>OPENAI_API_KEY</code> 环境变量读取。</p>
+          <pre><code>from starbridge import CloudClient
+
+cloud = CloudClient()
+print(cloud.time("Asia/Shanghai"))
+print(cloud.weather(31.2304, 121.4737))
+print(cloud.transcribe("recording.wav", language="zh"))
+print(cloud.chat("用一句话介绍星核板"))</code></pre>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <div id="stardust-page" class="manual-page" role="tabpanel" hidden>
+    <div class="layout">
+      <nav aria-label="星尘板目录">
+        <strong>星尘板</strong>
+        <a href="#sd-start">开始使用</a><a href="#sd-pins">引脚说明</a><a href="#sd-gpio">数字输入输出</a><a href="#sd-analog">ADC 与 PWM</a><a href="#sd-oled">OLED 显示屏</a><a href="#sd-dht11">DHT11 温湿度</a><a href="#sd-pixels">WS2812 灯珠</a><a href="#sd-ultrasonic">超声波测距</a><a href="#sd-pn532">PN532 NFC</a><a href="#sd-mp3">串口 MP3</a><a href="#sd-softserial">通用软串口</a><a href="#sd-combined">综合示例</a><a href="#sd-errors">异常处理</a>
+      </nav>
+      <main>
+        <section id="sd-start" class="board-intro">
+          <h2>星尘板</h2>
+          <p class="meta">ATmega328P、16 MHz、5V 逻辑，使用 <code>BoardType.STARDUST</code> 和 <code>StardustPin</code> 引脚枚举。</p>
+          <div class="chips"><span class="chip">CH340 USB 串口</span><span class="chip">5V 逻辑</span><span class="chip">ADC</span><span class="chip">PWM</span><span class="chip">I²C</span></div>
+          <h3>安装与连接</h3>
+          <pre><code>python -m pip install --upgrade starbridge-hardware</code></pre>
+          <pre><code>from starbridge import Board, BoardType
+
+with Board.begin(BoardType.STARDUST) as board:
+    info = board.info()
+    print("固件版本：", f"{info.firmware_major}.{info.firmware_minor}.{info.firmware_patch}")
+    print("功能位：", hex(info.capabilities))</code></pre>
+          <div class="note">D0/RX 和 D1/TX 用于电脑与开发板之间的协议通信，不作为普通 GPIO 使用。连接多块设备时可以指定 <code>port="COM5"</code>。</div>
+        </section>
+        <section id="sd-pins">
+          <h2>引脚说明</h2>
+          <div class="pin-grid"><div class="pin-card"><b>数字 I/O</b>D2、D3、D5、D6、D9、D10</div><div class="pin-card"><b>数字 I/O + ADC</b>A0、A1、A2、A3</div><div class="pin-card"><b>PWM</b>D3、D5、D6、D9、D10</div><div class="pin-card"><b>专用 I²C</b>SDA=A4，SCL=A5</div><div class="pin-card"><b>协议串口</b>D0 / D1，不开放</div><div class="pin-card"><b>逻辑与供电</b>5V</div></div>
+          <div class="warning">A4、A5 专用于 I²C 外设，不作为通用 GPIO。星尘板没有 DAC、Wi-Fi 和 ESP-NOW。</div>
+        </section>
+        <section id="sd-gpio">
+          <h2>数字输入输出</h2><p>D2 输出电平，D3 接按钮并使用内部上拉。按钮另一端接 GND。</p>
+          <pre><code>import time
+from starbridge import Board, BoardType, PinMode, StardustPin
+
+with Board.begin(BoardType.STARDUST) as board:
+    board.pin_mode(StardustPin.D2, PinMode.OUTPUT)
+    board.pin_mode(StardustPin.D3, PinMode.INPUT_PULLUP)
+    while True:
+        pressed = not board.digital_read(StardustPin.D3)
+        board.digital_write(StardustPin.D2, pressed)
+        print("按下" if pressed else "松开")
+        time.sleep(0.05)</code></pre>
+        </section>
+        <section id="sd-analog">
+          <h2>ADC 与 PWM</h2><p>A0～A3 可读取 10 位 ADC；PWM 是 8 位固定频率输出。D5、D6 为 980 Hz，D3、D9、D10 为 490 Hz。</p>
+          <pre><code>import time
+from starbridge import Board, BoardType, StardustPin
+
+with Board.begin(BoardType.STARDUST) as board:
+    print("A0 原始值：", board.analog_read(StardustPin.A0))
+    print("A0 电压：", board.analog_read(StardustPin.A0, millivolts=True), "mV")
+    board.pwm_configure(StardustPin.D9, frequency=490, resolution=8)
+    for duty in range(0, 256, 8):
+        board.pwm_write(StardustPin.D9, duty)
+        time.sleep(0.03)
+    board.pwm_stop(StardustPin.D9)</code></pre>
+        </section>
+        <section id="sd-oled">
+          <h2>SSD1306 OLED 显示屏</h2>
+          <div class="wiring"><div class="wire"><b>SDA</b>A4 专用接口</div><div class="wire"><b>SCL</b>A5 专用接口</div><div class="wire"><b>地址</b>通常为 0x3C</div><div class="wire"><b>供电</b>按模块标识连接</div></div>
+          <pre><code>from starbridge import Board, BoardType
+
+with Board.begin(BoardType.STARDUST) as board:
+    oled = board.oled().begin(0x3C)
+    oled.clear()
+    oled.text(0, 14, "你好，星尘")
+    oled.rect(0, 20, 128, 30)
+    oled.line(0, 63, 127, 0)
+    oled.pixel(64, 32)
+    oled.show()
+    input("按回车退出")</code></pre>
+          <div class="note">星尘板使用 411 字常用中文子集，并支持 ASCII、文字、像素、直线和矩形。受 AVR Flash 与 SRAM 容量限制，不使用位图命令。</div>
+        </section>
+        <section id="sd-dht11">
+          <h2>DHT11 温湿度</h2>
+          <div class="wiring"><div class="wire"><b>DATA</b>D2</div><div class="wire"><b>VCC</b>5V</div><div class="wire"><b>GND</b>GND</div></div>
+          <div class="warning">裸 DHT11 通常需要在 DATA 与 VCC 之间连接 4.7kΩ～10kΩ 上拉电阻。</div>
+          <pre><code>import time
+from starbridge import Board, BoardType, StardustPin
+
+with Board.begin(BoardType.STARDUST) as board:
+    sensor = board.dht11(StardustPin.D2)
+    while True:
+        data = sensor.read()
+        print(f"温度 {data.temperature_c:.1f} °C")
+        print(f"湿度 {data.humidity_percent:.1f} %")
+        time.sleep(2)</code></pre>
+        </section>
+        <section id="sd-pixels">
+          <h2>WS2812 / NeoPixel</h2><p>DIN 接 D3，灯带电源与星尘板共地。星尘固件单路最多控制 16 颗灯珠。</p>
+          <pre><code>import time
+from starbridge import Board, BoardType, StardustPin
+
+with Board.begin(BoardType.STARDUST) as board:
+    pixels = board.neopixel(StardustPin.D3, 8, brightness=48)
+    for index in range(8):
+        pixels.set_pixel(index, 0, 40 * (index % 4), 255)
+    pixels.show()
+    time.sleep(2)
+    pixels.clear()</code></pre>
+        </section>
+        <section id="sd-ultrasonic">
+          <h2>超声波测距</h2>
+          <div class="wiring"><div class="wire"><b>TRIG</b>D2</div><div class="wire"><b>ECHO</b>D3</div><div class="wire"><b>VCC</b>5V</div><div class="wire"><b>GND</b>GND</div></div>
+          <p>星尘板采用 5V 逻辑，常见 HC-SR04 的 ECHO 可以直接连接。Trig 与 Echo 必须使用两个不同的可用 GPIO。</p>
+          <pre><code>import time
+from starbridge import Board, BoardType, StardustPin
+from starbridge.errors import BoardCommandError
+
+with Board.begin(BoardType.STARDUST) as board:
+    sonar = board.ultrasonic(StardustPin.D2, StardustPin.D3)
+    while True:
+        try:
+            print(f"距离 {sonar.read_cm():.1f} cm")
+        except BoardCommandError:
+            print("没有收到回波")
+        time.sleep(0.5)</code></pre>
+        </section>
+        <section id="sd-pn532">
+          <h2>PN532 NFC（I²C）</h2>
+          <div class="wiring"><div class="wire"><b>SDA</b>A4 专用接口</div><div class="wire"><b>SCL</b>A5 专用接口</div><div class="wire"><b>RSTPD_N</b>D5，可选</div><div class="wire"><b>地址</b>0x24</div></div>
+          <div class="warning">先把 PN532 模块切换到 I²C 模式。OLED 与 PN532 可以共用 A4/A5，但地址不能冲突。</div>
+          <pre><code>from starbridge import Board, BoardType, StardustPin
+
+with Board.begin(BoardType.STARDUST) as board:
+    nfc = board.pn532(reset_pin=StardustPin.D5).begin()
+    print("固件：", nfc.firmware_info())
+    uid = nfc.scan(timeout=0.25)
+    if uid is None:
+        print("未检测到卡片")
+    else:
+        print("UID：", uid.hex("-").upper())
+        print("第 4 页：", nfc.read_page(4))
+        nfc.write_page(4, b"NFC!")</code></pre>
+        </section>
+        <section id="sd-mp3">
+          <h2>DFR0534 串口 MP3</h2>
+          <div class="wiring"><div class="wire"><b>模块 TX</b>星尘板 RX / D6</div><div class="wire"><b>模块 RX</b>星尘板 TX / D9</div><div class="wire"><b>BUSY</b>D10，可省略</div><div class="wire"><b>波特率</b>9600</div></div>
+          <pre><code>import time
+from starbridge import Board, BoardType, StardustPin
+
+with Board.begin(BoardType.STARDUST) as board:
+    mp3 = board.mp3(StardustPin.D6, StardustPin.D9, StardustPin.D10)
+    mp3.set_volume(18)
+    mp3.play_track(1)
+    time.sleep(5)
+    mp3.pause()
+    print("播放状态：", mp3.status())</code></pre>
+          <div class="note">MP3 与通用软串口使用相同的 AVR 软件串口资源。程序中应只启用其中一种，后初始化的功能会关闭前一路。</div>
+        </section>
+        <section id="sd-softserial">
+          <h2>通用软串口</h2><p>第一个引脚是 RX，第二个引脚是 TX；支持 300～115200 baud，单次读写最多 96 字节。</p>
+          <pre><code>from starbridge import Board, BoardType, StardustPin
+
+with Board.begin(BoardType.STARDUST) as board:
+    uart = board.software_serial(StardustPin.D5, StardustPin.D6, 9600)
+    uart.write(b"AT\r\n")
+    print(uart.read(maximum=32, timeout=1.0))
+    uart.close()</code></pre>
+        </section>
+        <section id="sd-combined">
+          <h2>综合示例：环境显示器</h2><p>DHT11 使用 D2，超声波使用 D5/D6，OLED 使用专用 A4/A5。没有回波时程序仍会继续刷新。</p>
+          <pre><code>import time
+from starbridge import Board, BoardType, StardustPin
+from starbridge.errors import BoardCommandError
+
+with Board.begin(BoardType.STARDUST) as board:
+    climate = board.dht11(StardustPin.D2)
+    sonar = board.ultrasonic(StardustPin.D5, StardustPin.D6)
+    oled = board.oled().begin(0x3C)
     while True:
         reading = climate.read()
         try:
-            distance_text = f"距离: {sonar.read_cm():.1f} cm"
+            distance = f"距离 {sonar.read_cm():.1f} cm"
         except BoardCommandError:
-            distance_text = "距离: 过近或无回波"
-
+            distance = "距离 无回波"
         oled.clear()
-        oled.text(0, 8, f"温度: {reading.temperature_c:.1f} C")
-        oled.text(0, 26, f"湿度: {reading.humidity_percent:.1f} %")
-        oled.text(0, 44, distance_text)
+        oled.text(0, 12, f"温度 {reading.temperature_c:.1f} C")
+        oled.text(0, 30, f"湿度 {reading.humidity_percent:.1f} %")
+        oled.text(0, 48, distance)
         oled.show()
-        time.sleep(1)</code></pre>
-      </section>
-
-      <section id="errors">
-        <h2>异常处理</h2>
-        <p>4.4.0 的异常会直接说明功能、可能原因和处理建议，同时保留命令号与状态码供开发者排查。</p>
-        <pre><code>from starbridge import Board, BoardType, Pin
-from starbridge.errors import (
-    BoardCommandError,
-    BoardNotFoundError,
-    FirmwareInstallError,
-)
+        time.sleep(2)</code></pre>
+        </section>
+        <section id="sd-errors">
+          <h2>异常处理</h2><p>找不到开发板、固件安装失败或元器件没有响应时，可以分别捕获对应异常。</p>
+          <pre><code>from starbridge import Board, BoardType, StardustPin
+from starbridge.errors import BoardCommandError, BoardNotFoundError, FirmwareInstallError
 
 try:
-    with Board.begin(BoardType.STARCORE_V2) as board:
-        print(board.dht11(Pin.P1).read())
+    with Board.begin(BoardType.STARDUST) as board:
+        print(board.dht11(StardustPin.D2).read())
 except BoardNotFoundError as error:
-    print("未找到开发板：", error)
+    print("未找到星尘板：", error)
 except FirmwareInstallError as error:
     print("固件安装失败：", error)
 except BoardCommandError as error:
-    print(error)
-    print("命令号：", hex(error.command))
-    print("状态码：", error.status)</code></pre>
-      </section>
-    </main>
+    print("元器件通信失败：", error)</code></pre>
+        </section>
+      </main>
+    </div>
   </div>
 
-  <footer>StarBridge 4.4 · StarCore V2 · 单文件离线示例手册</footer>
+  <footer>StarBridge SDK 4.5.0 · 星核板 V2 / 星尘板示例程序手册</footer>
   <script>
+    const tabs = [...document.querySelectorAll(".board-tab")];
+    const pages = [...document.querySelectorAll(".manual-page")];
+    function showPage(pageId, updateHash = true) {
+      tabs.forEach((tab) => {
+        const selected = tab.dataset.page === pageId;
+        tab.classList.toggle("active", selected);
+        tab.setAttribute("aria-selected", String(selected));
+      });
+      pages.forEach((page) => {
+        const selected = page.id === pageId;
+        page.classList.toggle("active", selected);
+        page.hidden = !selected;
+      });
+      if (updateHash) history.replaceState(null, "", pageId === "stardust-page" ? "#stardust" : "#starcore-v2");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+    tabs.forEach((tab) => tab.addEventListener("click", () => showPage(tab.dataset.page)));
+    showPage(location.hash === "#stardust" ? "stardust-page" : "starcore-page", false);
     document.querySelectorAll("pre").forEach((block) => {
       const button = document.createElement("button");
       button.className = "copy";
@@ -470,9 +477,8 @@ except BoardCommandError as error:
       button.textContent = "复制";
       button.addEventListener("click", async () => {
         const text = block.querySelector("code").textContent;
-        if (navigator.clipboard && window.isSecureContext) {
-          await navigator.clipboard.writeText(text);
-        } else {
+        if (navigator.clipboard && window.isSecureContext) await navigator.clipboard.writeText(text);
+        else {
           const area = document.createElement("textarea");
           area.value = text;
           area.style.position = "fixed";

@@ -72,6 +72,24 @@ _COMMAND_NAMES = {
     Command.MP3_SET_VOLUME: "MP3 音量设置",
     Command.MP3_STATUS: "MP3 状态读取",
     Command.MP3_BUSY: "MP3 BUSY 读取",
+    Command.PN532_INIT: "PN532 初始化",
+    Command.PN532_FIRMWARE_VERSION: "PN532 固件版本读取",
+    Command.PN532_SCAN: "PN532 NFC 寻卡",
+    Command.PN532_CLASSIC_READ: "MIFARE Classic 块读取",
+    Command.PN532_CLASSIC_WRITE: "MIFARE Classic 块写入",
+    Command.PN532_PAGE_READ: "NTAG/Ultralight 页读取",
+    Command.PN532_PAGE_WRITE: "NTAG/Ultralight 页写入",
+    Command.SOFTWARE_SERIAL_INIT: "软串口初始化",
+    Command.SOFTWARE_SERIAL_WRITE: "软串口发送",
+    Command.SOFTWARE_SERIAL_READ: "软串口接收",
+    Command.WIFI_CONNECT: "Wi-Fi 连接",
+    Command.WIFI_STATUS: "Wi-Fi 状态读取",
+    Command.ESPNOW_INIT: "ESP-NOW 初始化",
+    Command.ESPNOW_ADD_PEER: "ESP-NOW 添加节点",
+    Command.ESPNOW_SEND: "ESP-NOW 发送",
+    Command.ESPNOW_RECEIVE: "ESP-NOW 接收",
+    Command.TIME_SYNC: "网络时间同步",
+    Command.TIME_NOW: "网络时间读取",
 }
 
 _STATUS_NAMES = {
@@ -102,6 +120,34 @@ _COMMAND_GUIDANCE = {
     ),
     Command.MP3_INIT: (
         "确认开发板 RX 连接模块 T、开发板 TX 连接模块 R，模块波特率为 9600，并检查供电和共地。"
+    ),
+    Command.PN532_INIT: (
+        "确认 PN532 已切换到 I²C 模式，SDA 接 P20、SCL 接 P19，并检查 3.3V 逻辑电平和共地；"
+        "模块无法从休眠唤醒时再连接 RSTPD_N 并传入 reset_pin。"
+    ),
+    Command.PN532_SCAN: (
+        "确认卡片支持 ISO14443A，并贴近天线；没有卡片时 scan() 会正常返回 None。"
+    ),
+    Command.PN532_CLASSIC_READ: (
+        "确认卡片为 MIFARE Classic，块号和 A/B 密钥正确，并保持卡片贴近天线。"
+    ),
+    Command.PN532_CLASSIC_WRITE: (
+        "确认卡片未锁定、块号和 A/B 密钥正确；写入期间不要移动卡片。"
+    ),
+    Command.PN532_PAGE_READ: (
+        "确认卡片为 NTAG 或 MIFARE Ultralight，页号有效，并保持卡片贴近天线。"
+    ),
+    Command.PN532_PAGE_WRITE: (
+        "确认标签页未锁定且页号位于可写区域；写入期间不要移动卡片。"
+    ),
+    Command.WIFI_CONNECT: (
+        "确认 SSID、密码和 2.4 GHz 网络可用；ESP32 不支持仅 5 GHz 的接入点。"
+    ),
+    Command.ESPNOW_INIT: (
+        "确认信道为 1–14；若 Wi-Fi 已连接，ESP-NOW 必须使用相同信道。"
+    ),
+    Command.TIME_SYNC: (
+        "先连接 Wi-Fi，并确认网络允许访问所选 NTP 服务器。"
     ),
 }
 

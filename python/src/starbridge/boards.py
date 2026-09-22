@@ -17,6 +17,16 @@ class BoardProfile:
     description_hints: tuple[str, ...]
     baudrate: int = 115200
     minimum_firmware_major: int = 4
+    minimum_firmware_minor: int = 0
+    minimum_firmware_patch: int = 0
+
+    @property
+    def minimum_firmware_version(self) -> tuple[int, int, int]:
+        return (
+            self.minimum_firmware_major,
+            self.minimum_firmware_minor,
+            self.minimum_firmware_patch,
+        )
 
     @property
     def has_firmware(self) -> bool:
@@ -35,7 +45,23 @@ BOARD_PROFILES: dict[BoardType, BoardProfile] = {
             (0x10C4, 0xEA60),  # Silicon Labs CP210x
             (0x1A86, 0x55D4),  # WCH CH9102
         }),
-        description_hints=("cp210", "silicon labs", "ch910", "wch.cn", "starcore"),
+        description_hints=("cp210", "silicon labs", "ch910", "starcore"),
+        minimum_firmware_minor=2,
+    ),
+    BoardType.STARDUST: BoardProfile(
+        type=BoardType.STARDUST,
+        display_name="StarDust (星尘板)",
+        board_id=3,
+        fqbn="starbridge:avr:stardust",
+        firmware_directory="stardust",
+        architecture="avr",
+        vid_pid=frozenset({
+            (0x1A86, 0x7523),  # WCH CH340/CH341
+            (0x1A86, 0x5523),  # Older WCH CH340 identity
+        }),
+        description_hints=("ch340", "usb-serial ch34", "stardust"),
+        minimum_firmware_minor=3,
+        minimum_firmware_patch=1,
     ),
     BoardType.ARDUINO_UNO: BoardProfile(
         type=BoardType.ARDUINO_UNO,

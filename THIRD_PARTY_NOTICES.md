@@ -12,7 +12,10 @@ The MIT license at the repository root applies only to original StarBridge v4 co
 
 The bundled U8g2 source contains fonts and other assets with licenses that differ from the library code. Their copyright and license comments are retained in the upstream source. U8g2's font-license index is available at https://github.com/olikraus/u8g2/wiki/fntgrp.
 
-StarBridge uses `u8g2_font_wqy12_t_gb2312`. Its source identifies it as GPL-2.0-or-later with the GNU Font Embedding Exception. The original notice remains in `firmware/shared-libraries/U8g2/src/clib/u8g2_fonts.c`.
+StarCore V2 uses `u8g2_font_wqy12_t_gb2312`; StarDust uses the smaller
+`u8g2_font_wqy12_t_chinese1` subset. Their source identifies the WenQuanYi
+font as GPL-2.0-or-later with the GNU Font Embedding Exception. The original
+notice remains in `firmware/shared-libraries/U8g2/src/clib/u8g2_fonts.c`.
 
 ## DFRobot DHT11
 
@@ -30,12 +33,14 @@ StarBridge uses `u8g2_font_wqy12_t_gb2312`. Its source identifies it as GPL-2.0-
 
 ## EspSoftwareSerial
 
-- Location: `firmware/platforms/esp32/libraries/EspSoftwareSerial`
+- Location: `firmware/starcore-v2/libraries/EspSoftwareSerial`
 - Source: https://github.com/plerup/espsoftwareserial
 - Version/commit: `8.1.0` / `9e61fa07c3a81b90fa1c2b333f963c0b70b74fe3`
-- License: LGPL-2.1-or-later; bundled as `firmware/platforms/esp32/libraries/EspSoftwareSerial/LICENSE`
+- License: LGPL-2.1-or-later; bundled as `firmware/starcore-v2/libraries/EspSoftwareSerial/LICENSE`
 
 The DFR0534 command framing code under `firmware/starcore-v2/src/board` is original StarBridge code written from DFRobot's published serial protocol and is covered by the repository MIT license.
+
+The PN532 I2C implementation under `firmware/starcore-v2/src/drivers` is original StarBridge code based on the public PN532 host-controller protocol. It does not bundle DFRobot PN532, Adafruit PN532, or Adafruit BusIO source.
 
 ## Espressif esptool
 
@@ -46,6 +51,13 @@ The DFR0534 command framing code under `firmware/starcore-v2/src/board` is origi
 - The upstream license is bundled beside the executable as `ESPTOOL_LICENSE.txt`.
 
 The executable is distributed as an independent program and is invoked through a subprocess. StarBridge does not link against or import esptool code.
+
+## Arduino AVR Core and avrdude
+
+- `arduino:avr` version 1.8.8 is the pinned build dependency for StarDust. The custom StarDust pin variant is derived from Arduino's standard ATmega328P variant and retains its LGPL-2.1-or-later notice.
+- Windows release wheels bundle avrdude `8.0.0-arduino1` and `avrdude.conf` as independent subprocess resources for offline StarDust flashing.
+- avrdude source: https://github.com/avrdudes/avrdude
+- The upstream avrdude license is bundled as `starbridge/_offline/windows-x86_64/AVRDUDE_LICENSE.txt`.
 
 ## pySerial
 
