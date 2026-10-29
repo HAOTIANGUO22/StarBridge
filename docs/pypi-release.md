@@ -38,3 +38,5 @@ git push origin pypi-v4.5.1
 ```
 
 两种方式都会先运行测试、生成 wheel 并检查元数据，随后通过 PyPI Trusted Publishing 上传，不需要在 GitHub 保存 API Token。
+
+PyPI 发布成功后，工作流会读取 `docs/releases/v版本号.md`，创建对应的 GitHub Release 并上传同一份 wheel。发布前请准备对应版本的说明文件；4.5.1 的发布标题标注为“Mind+ 兼容版”。

@@ -64,3 +64,50 @@ jobs:
 
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
+
+  github-release:
+    name: Publish GitHub Release
+    needs: publish
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Check out release notes
+        uses: actions/checkout@v4
+
+      - name: Download distribution artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: python-package-distributions
+          path: dist/
+
+      - name: Publish release notes and wheel
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const metadata = fs.readFileSync('python/pyproject.toml', 'utf8');
+            const version = /^version = "([^"]+)"/m.exec(metadata)[1];
+            const tag = `v${version}`;
+            const body = fs.readFileSync(`docs/releases/${tag}.md`, 'utf8');
+            const repo = context.repo;
+            let release;
+            try {
+              release = (await github.rest.repos.getReleaseByTag({...repo, tag})).data;
+            } catch (error) {
+              if (error.status !== 404) throw error;
+              release = (await github.rest.repos.createRelease({
+                ...repo, tag_name: tag, target_commitish: context.sha,
+                name: `${tag} · Mind+ 兼容版`, body,
+                draft: false, prerelease: false,
+              })).data;
+            }
+            for (const name of fs.readdirSync('dist').filter(name => name.endsWith('.whl'))) {
+              if (release.assets.some(asset => asset.name === name)) continue;
+              await github.rest.repos.uploadReleaseAsset({
+                ...repo, release_id: release.id, name,
+                data: fs.readFileSync(`dist/${name}`),
+                headers: {'content-type': 'application/octet-stream'},
+              });
+            }
+            core.notice(`Published ${release.html_url}`);
