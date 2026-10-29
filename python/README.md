@@ -1,4 +1,6 @@
-# StarBridge Python SDK 4.5.1
+# StarBridge Python SDK 4.5.1 · Mind+ 兼容版
+
+**Mind+ 兼容版：支持 Mind+ 自带的 Windows 64 位 Python 3.8.5 和 pip 22.0.4，安装名仍为 `starbridge-hardware`，导入名仍为 `starbridge`。**
 
 Supports Python 3.8 and newer, including the Windows x86-64 Python 3.8.5 runtime bundled with Mind+. No additional runtime dependencies or pip upgrade are required when installing the wheel. The distribution name and Python API are unchanged. See [Mind+ installation instructions](https://github.com/HAOTIANGUO22/StarBridge/blob/main/docs/mindplus.md).
 

@@ -1,5 +1,7 @@
 # StarBridge
 
+**4.5.1 · Mind+ 兼容版**：支持 Mind+ 自带的 Python 3.8.5，保留原有包名与 API。详见 [Mind+ 安装与使用](docs/mindplus.md) 和 [4.5.1 发布说明](docs/releases/v4.5.1.md)。
+
 StarBridge 是一个通过 Python 控制微控制器开发板及其外设的软硬件开发平台。项目在电脑端提供统一的 Python API，在开发板端运行对应固件，并通过带校验、序号和错误码的串口协议连接两端。
 
 使用 StarBridge，可以在 Python 程序中直接控制 GPIO、PWM、传感器、显示屏、灯带和串口设备，而不需要为每个实验重复编写底层串口通信代码。

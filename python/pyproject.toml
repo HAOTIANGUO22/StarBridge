@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "starbridge-hardware"
 version = "4.5.1"
-description = "Python SDK and offline firmware for StarBridge StarCore and StarDust boards"
+description = "StarBridge Python SDK and offline firmware - Mind+ compatible (Python 3.8+)"
 readme = "README.md"
 requires-python = ">=3.8"
 license = { file = "LICENSE" }
