@@ -70,14 +70,14 @@ Python 程序
 
 ### 1. 安装 Python SDK
 
-项目要求 Python 3.10 或更高版本：
+4.5.1 起支持 Python 3.8 或更高版本，包括 Mind+ 自带的 Windows 64 位 Python 3.8.5。安装包仍叫 `starbridge-hardware`，导入名和调用方式保持一致。Mind+ 用户请参阅 [Mind+ 安装与使用](docs/mindplus.md)。
 
 ```powershell
 # 从 PyPI 安装（发行名为 starbridge-hardware，导入名仍为 starbridge）
 python -m pip install starbridge-hardware
 
-# 也可以从 GitHub Release 安装
-python -m pip install https://github.com/HAOTIANGUO22/StarBridge/releases/download/v4.5.0/starbridge_hardware-4.5.0-py3-none-any.whl
+# 也可以安装已下载的 wheel（适用于未发布版本或离线安装）
+python -m pip install .\starbridge_hardware-4.5.1-py3-none-any.whl
 
 # 开发仓库中使用可编辑安装
 python -m pip install -e .\python
@@ -85,7 +85,7 @@ python -m pip install -e .\python
 
 Windows wheel 已包含 StarCore V2 和 StarDust 的预编译固件，以及 esptool 与 avrdude 离线烧录器。用户安装这一个 wheel 后，`Board.begin()` 可在无 Arduino IDE、Arduino CLI 或板卡 Core 的电脑上自动烧录。
 
-如需从源码重新编译固件并构建 wheel，先安装 `build`，再执行：
+如需从源码重新编译固件并构建 wheel，请使用 Python 3.10 或更高版本安装 `build`，再执行：
 
 ```powershell
 python -m pip install build

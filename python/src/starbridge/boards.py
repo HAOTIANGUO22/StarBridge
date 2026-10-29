@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from .constants import BoardType
 
 
-@dataclass(frozen=True, slots=True)
+@dataclass(frozen=True)
 class BoardProfile:
     type: BoardType
     display_name: str

@@ -8,7 +8,7 @@ from .constants import Command, Pin
 from .errors import ProtocolError
 
 
-@dataclass(frozen=True, slots=True)
+@dataclass(frozen=True)
 class DHT11Reading:
     temperature_c: float
     humidity_percent: float

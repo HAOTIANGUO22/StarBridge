@@ -22,7 +22,7 @@ def crc16_ccitt(data: bytes, initial: int = 0xFFFF) -> int:
     return crc
 
 
-@dataclass(frozen=True, slots=True)
+@dataclass(frozen=True)
 class Frame:
     kind: FrameKind
     sequence: int

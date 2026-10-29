@@ -8,7 +8,7 @@ from .constants import Command, Pin
 from .errors import ProtocolError
 
 
-@dataclass(frozen=True, slots=True)
+@dataclass(frozen=True)
 class PN532FirmwareInfo:
     ic: int
     major: int

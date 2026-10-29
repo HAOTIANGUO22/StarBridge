@@ -1,6 +1,6 @@
 {
   "chip": "esp32",
-  "sdk_version": "4.5.0",
+  "sdk_version": "4.5.1",
   "firmware_version": "4.2.0",
   "esp32_core_version": "3.3.11",
   "baud": 921600,

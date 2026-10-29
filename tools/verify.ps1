@@ -6,7 +6,7 @@ $venvPython = Join-Path $projectRoot '.venv\Scripts\python.exe'
 $python = if (Test-Path -LiteralPath $venvPython -PathType Leaf) { $venvPython } else { 'python' }
 $pythonArgs = @()
 if ($python -eq 'python') {
-    & $python -c "import sys; raise SystemExit(0 if sys.version_info >= (3, 10) else 1)"
+    & $python -c "import sys; raise SystemExit(0 if sys.version_info >= (3, 8) else 1)"
     if ($LASTEXITCODE -ne 0 -and (Get-Command py -ErrorAction SilentlyContinue)) {
         $python = 'py'
         $pythonArgs = @('-3.13')
@@ -26,7 +26,7 @@ $stardustBuildPath = Join-Path $env:LOCALAPPDATA 'StarBridge\verify\stardust'
 
 & (Join-Path $PSScriptRoot 'bootstrap-arduino.ps1')
 
-& $python @pythonArgs -c "import sys; raise SystemExit(0 if sys.version_info >= (3, 10) else 'StarBridge requires Python 3.10 or newer.')"
+& $python @pythonArgs -c "import sys; raise SystemExit(0 if sys.version_info >= (3, 8) else 'StarBridge requires Python 3.8 or newer.')"
 if ($LASTEXITCODE -ne 0) { throw 'A supported Python interpreter was not found.' }
 
 $previousPythonPath = $env:PYTHONPATH

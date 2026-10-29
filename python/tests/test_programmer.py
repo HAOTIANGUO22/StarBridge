@@ -260,7 +260,7 @@ class ProgrammerTests(unittest.TestCase):
             )
 
         text = output.getvalue()
-        self.assertIn("StarBridge 4.5.0", text)
+        self.assertIn("StarBridge 4.5.1", text)
         self.assertIn("固件 4.0.0", text)
         self.assertIn("100%", text)
         self.assertIn("烧录完成", text)

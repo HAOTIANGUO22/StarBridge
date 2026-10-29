@@ -19,7 +19,7 @@ class WiFiStatus(IntEnum):
     DISCONNECTED = 6
 
 
-@dataclass(frozen=True, slots=True)
+@dataclass(frozen=True)
 class WiFiInfo:
     status: WiFiStatus | int
     ip: str

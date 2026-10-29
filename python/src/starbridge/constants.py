@@ -1,16 +1,19 @@
 from __future__ import annotations
 
-from enum import IntEnum, StrEnum
+from enum import Enum, IntEnum
 
 
 PROTOCOL_VERSION = 2
 MAX_PAYLOAD = 256
 
 
-class BoardType(StrEnum):
+class BoardType(str, Enum):
     STARCORE_V2 = "starcore-v2"
     STARDUST = "stardust"
     ARDUINO_UNO = "arduino-uno"
+
+    def __str__(self) -> str:
+        return self.value
 
 
 class FrameKind(IntEnum):

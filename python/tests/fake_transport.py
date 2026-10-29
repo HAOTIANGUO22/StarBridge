@@ -1,12 +1,12 @@
 from __future__ import annotations
 
-from collections.abc import Callable
+from typing import Callable, Tuple
 
 from starbridge.constants import FrameKind, Status
 from starbridge.protocol import Frame, decode_frame
 
 
-Handler = Callable[[Frame], tuple[int, bytes]]
+Handler = Callable[[Frame], Tuple[int, bytes]]
 
 
 class FakeTransport:

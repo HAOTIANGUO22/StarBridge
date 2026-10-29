@@ -22,7 +22,7 @@ from .espnow import ESPNow
 from .network_time import NetworkTime
 
 
-@dataclass(frozen=True, slots=True)
+@dataclass(frozen=True)
 class BoardInfo:
     protocol_version: int
     firmware_major: int

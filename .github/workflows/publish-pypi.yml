@@ -7,7 +7,11 @@ on:
   workflow_dispatch:
 
 jobs:
+  sdk-tests:
+    uses: ./.github/workflows/python-compatibility.yml
+
   build:
+    needs: sdk-tests
     name: Build and validate distribution
     runs-on: windows-latest
     permissions:

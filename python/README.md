@@ -1,4 +1,6 @@
-# StarBridge Python SDK 4.5.0
+# StarBridge Python SDK 4.5.1
+
+Supports Python 3.8 and newer, including the Windows x86-64 Python 3.8.5 runtime bundled with Mind+. No additional runtime dependencies or pip upgrade are required when installing the wheel. The distribution name and Python API are unchanged. See [Mind+ installation instructions](https://github.com/HAOTIANGUO22/StarBridge/blob/main/docs/mindplus.md).
 
 Install the public distribution from PyPI:
 

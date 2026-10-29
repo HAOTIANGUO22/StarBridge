@@ -94,7 +94,7 @@ $licenseText = [System.IO.File]::ReadAllText($avrdudeLicenseTarget).Replace("`r`
 $manifest = @{
     format = 1
     board = 'starcore-v2'
-    sdk_version = '4.5.0'
+    sdk_version = '4.5.1'
     firmware_version = '4.2.0'
     esp32_core_version = '3.3.11'
     esptool_version = '5.3.1'
@@ -116,7 +116,7 @@ $stardustManifest = @{
     format = 1
     board = 'stardust'
     architecture = 'avr'
-    sdk_version = '4.5.0'
+    sdk_version = '4.5.1'
     firmware_version = '4.3.1'
     arduino_avr_core_version = '1.8.8'
     avrdude_version = '8.0.0-arduino1'
@@ -134,6 +134,6 @@ $stardustManifest | ConvertTo-Json -Depth 5 | Set-Content `
 & $python @pythonArgs -m build --wheel --outdir $outputDirectory $pythonRoot
 if ($LASTEXITCODE -ne 0) { throw 'StarBridge wheel build failed.' }
 
-Get-ChildItem -LiteralPath $outputDirectory -Filter 'starbridge_hardware-4.5.0-*.whl' |
+Get-ChildItem -LiteralPath $outputDirectory -Filter 'starbridge_hardware-4.5.1-*.whl' |
     Sort-Object LastWriteTime -Descending |
     Select-Object -First 1 -ExpandProperty FullName

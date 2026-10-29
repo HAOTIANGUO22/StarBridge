@@ -19,14 +19,14 @@ class CloudAPIError(StarBridgeError):
     """A cloud service rejected a request or returned malformed data."""
 
 
-@dataclass(frozen=True, slots=True)
+@dataclass(frozen=True)
 class TimeAPIResult:
     datetime: datetime
     timezone: str
     unix_time: int
 
 
-@dataclass(frozen=True, slots=True)
+@dataclass(frozen=True)
 class WeatherReading:
     temperature_c: float | None
     humidity_percent: float | None

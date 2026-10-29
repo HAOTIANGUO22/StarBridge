@@ -20,7 +20,7 @@ def normalize_mac(mac: str | bytes | bytearray) -> bytes:
     return raw
 
 
-@dataclass(frozen=True, slots=True)
+@dataclass(frozen=True)
 class ESPNowMessage:
     mac: str
     data: bytes

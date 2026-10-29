@@ -11,6 +11,6 @@
   "board": "stardust",
   "programmer": "arduino",
   "baud": 115200,
-  "sdk_version": "4.5.0",
+  "sdk_version": "4.5.1",
   "format": 1
 }
